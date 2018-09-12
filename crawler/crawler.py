@@ -11,6 +11,7 @@ Date: 09/11/2018
 """
 
 import urllib.request
+from parser.parser import Parser
 
 
 class Crawler:
@@ -30,6 +31,8 @@ class Crawler:
         self.lat = lat
         self.lon = lon
 
+        self.parser = Parser()
+
         '''
         How to move the crawler???
         - supply boundary??
@@ -47,7 +50,10 @@ class Crawler:
 
         # search the lat and long
         res = self._search(self.lat, self.lon)
-        print(res)
+
+        # print results for now
+        for r in res:
+            print(r)
 
         # add to database???
 
@@ -129,7 +135,7 @@ class Crawler:
 
                 # append block if closed
                 if x == 0:
-                    res.append(html[beg:end])
+                    res.append(html[beg:end+1])
                     beg = end + 1
                     break
 
@@ -148,9 +154,17 @@ class Crawler:
           block: the gas station block
         """
 
-        beg = block.find('[', 1)
-        beg = block.find('[', beg+1)
-        end = block.find(']', beg+1)
+        # dictionary object for results
+        d = dict()
 
-        return dict(address=block[beg:end])
+        # parse the current block
+        self.parser.parse(block)
+
+        # extract the data from the known locations
+        d['address'] = self.parser.search([14, 37, 0, 0, 17, 0])
+        d['brand'] = self.parser.search([14,11])
+        d['price'] = self.parser.search([14,86,0,0,0])
+
+        # return the results
+        return d
 

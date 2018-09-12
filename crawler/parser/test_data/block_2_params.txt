@@ -1,0 +1,3 @@
+price=$3.40
+brand=ARCO
+address=201 N Grand Ave, West Covina, CA 91791
