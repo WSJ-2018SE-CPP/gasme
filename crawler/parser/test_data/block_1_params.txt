@@ -1,0 +1,3 @@
+price=$3.57
+brand=76
+address=608 S Barranca Ave, Covina, CA 91723
