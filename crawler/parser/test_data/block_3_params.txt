@@ -1,0 +1,7 @@
+address=2207 Valley Blvd, Pomona, CA 91768
+brand=Petrozone
+price_1=$3.30
+price_2=$3.40
+price_3=$3.50
+lat=34.0615843
+lon=-117.7920242
