@@ -23,17 +23,21 @@
 	{{ form.submit(class_="btn btn-primary") }} 
 	</div>
 	
+	Trip: {{trip.distance}},{{trip.duration}}
+	
 	<div>
 	<table class="table">    
 			<tr>
 				<th> Result </th>
 				<th> Place ID </th>
+				<th> Address </th>
 				<th> Name </th>
 				<th> Longitude </th>
 				<th> Latitude </th>
             <tr>
                <th> STARTING POINT: </th>
                <td> {{ origin.place_id }} </td>
+               <td> {{ origin.address }} </td>
                <td> {{ origin.name }} </td>
                <td> {{ origin.long }} </td>
                <td> {{ origin.lat }} </td>
@@ -42,6 +46,7 @@
             <tr>
                <th> DESTINATION: </th>
                <td> {{ destination.place_id }} </td>
+               <td> {{ destination.address }} </td>
                <td> {{ destination.name }} </td>
                <td> {{ destination.long }} </td>
                <td> {{ destination.lat }} </td>
