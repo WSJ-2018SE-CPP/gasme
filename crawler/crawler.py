@@ -19,7 +19,7 @@ class Crawler:
     A Crawler class for crawling GoogleMaps gas station prices.
     """
 
-    def __init__(self, lat, lon):
+    def __init__(self, city):
         """
         Initializes a crawler.
 
@@ -27,10 +27,11 @@ class Crawler:
           lat: the initial latitude
           lon: the initial longitude
         """
-        
-        self.lat = lat
-        self.lon = lon
+       
+        # starting city, maybe?
+        self.city = city
 
+        # parser for the gas station blocks
         self.parser = Parser()
 
         '''
@@ -49,7 +50,7 @@ class Crawler:
         # maybe a queue???
 
         # search the lat and long
-        res = self._search(self.lat, self.lon)
+        res = self._search(self.city)
 
         # print results for now
         for r in res:
@@ -58,17 +59,16 @@ class Crawler:
         # add to database???
 
     
-    def _search(self, lat, lon):
+    def _search(self, city):
         """
         Search the latitude and longitude for gas station information.
 
         Args:
-          lat: the latitude
-          lon: the longitude
+          city: the city to search
         """
 
         # url to search
-        url = 'https://www.google.com/maps/search/gas+prices/@%f,%f' % (lat, lon)
+        url = 'https://www.google.com/maps/search/gas+prices+%s' % city.replace(' ','+')
 
         # search results
         res = []
@@ -98,7 +98,7 @@ class Crawler:
         res = []
 
         # find the beginning of the first gas station block
-        s = '\\"gas prices\\"' 
+        s = '\\"gas prices' 
         beg = html.find(s, 0)
         beg = html.find(s, beg+len(s))
         beg = html.find(s, beg+len(s))
