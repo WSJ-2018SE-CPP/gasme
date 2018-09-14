@@ -16,6 +16,7 @@ class Node:
         self.children = children
         self.value = value.replace('"', '') if value is not None else value
 
+
     def __str__(self):
         """
         To String method.
@@ -31,28 +32,125 @@ class Node:
 
 class Parser:
     """
-    Object to parse individual data blocks per gas station.
+    Object to parse gas station information from url request.
     """
 
-    def __init__(self, text=None):
+    def __init__(self):
+
+        # known parameter locations within a block
+        self.param_mapping = dict([
+            ('address',[14,37,0,0,17,0]),
+            ('brand',[14,11]),
+            ('price_1',[14,86,0,0,0]),
+            ('price_2',[14,86,0,1,0]),
+            ('price_3',[14,86,0,2,0]),
+            ('lat',[14,9,2]),
+            ('lon',[14,9,3])
+        ])
+
+
+    def parse(self, html, gas_station, params):
         """
-        Initializes the parser, and parses if data is provided.
+        Parse the html for gas station data.
 
         Args:
-          text: the text to parse
+          html: the html page to parse
+          gas_station: the gas station used in the criteria search
+          params: a list of parameters to extract
         """
 
-        # parse if data present
-        if text is not None:
-            self._parse(text)
+        # result buffer
+        res = []
 
-    
-    def parse(self, text):
+        # for each gas station information block
+        for block in self._extract_blocks(html, gas_station):
+            
+            # parse the block and get the root node
+            node = self._parse_block(block)
+
+            # all data for the current block
+            block_data = dict()
+
+            # for each parameter of interest
+            for param in params:
+
+                # get the data and append to the block dictionary
+                block_data[param] = self._search(root=node, path=self.param_mapping[param])
+
+            # append the block data to the total result
+            res.append(block_data)
+
+        # return the result
+        return res
+
+
+    def _extract_blocks(self, html, gas_station):
         """
-        Parse the text and stores the resulting data structure.
+        Extract gas station information blocks from the raw html.
 
         Args:
-          text: the text to parse
+          html: the raw html
+          gas_station: the gas station
+        """
+
+        # array for the resulting blocks
+        res = []
+
+        # find the beginning of the first gas station block
+        s = '\\"%s gas prices' % gas_station
+        beg = html.find(s, 0)
+        beg = html.find(s, beg+len(s))
+        beg = html.find(s, beg+len(s))
+        beg = html.find('[', beg+len(s))
+
+        # extract the gas blocks
+        while True:
+
+            # if ] occurs before [, there are no more gas station blocks
+            if html[beg:].find(']') < html[beg:].find('['):
+                break
+
+            # get the starting index of the block
+            beg = html.find('[', beg)
+
+            # counter, +1 for [ and -1 for ]. when x == 0, the block is complete.
+            # x will always be incremented from the first character because
+            # we have set beg to [. Therefore, we check complete after + or - x.
+            x = 0
+
+            # initialize the end of the block
+            end = beg
+
+            # for each character in the text starting at the beginning block character
+            for c in html[beg:]:
+
+                # increment x
+                if c == '[':
+                    x += 1
+
+                # decrement x
+                elif c == ']':
+                    x -= 1
+
+                # append block if closed
+                if x == 0:
+                    res.append(html[beg:end+1])
+                    beg = end + 1
+                    break
+
+                # increment end
+                end += 1
+
+        # return the blocks
+        return res
+
+
+    def _parse_block(self, text):
+        """
+        Parse the block and return the root of the data structure.
+
+        Args:
+          text: the text block to parse
         """
         
         def parse_rec(node, text):
@@ -117,15 +215,16 @@ class Parser:
         text = text.replace('\\n', '')
         text = text.replace('],', ']')
 
-        # parse the text recursively and set to the root
-        self.root = parse_rec(Node([], None), text)
+        # parse the text recursively and return root
+        return parse_rec(Node([], None), text)
         
 
-    def get_path(self, text):
+    def get_path(self, block, text):
         """
         Returns a path to the data. Mostly used for testing purposes to find / define paths to relevant information
 
         Args:
+          block: the text of the gas station block
           text: the exact text to find
 
         Returns:
@@ -164,7 +263,7 @@ class Parser:
             return None
 
         # get the path
-        path = get_path_rec(self.root, [])
+        path = get_path_rec(self._parse_block(block), [])
 
         # test a path exists        
         if path is None:
@@ -174,11 +273,12 @@ class Parser:
         return path
 
     
-    def search(self, path):
+    def _search(self, root, path):
         """
         Get the data at a specified path.
 
         Args:
+          root: the root to search
           path: the path
 
         Returns:
@@ -187,7 +287,7 @@ class Parser:
 
         try:
             # start at the root
-            node = self.root
+            node = root
 
             # traverse the tree
             for d in path:
@@ -199,4 +299,5 @@ class Parser:
         except:
             # error, return None
             return None
+
 

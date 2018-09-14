@@ -63,11 +63,8 @@ class Test:
         # for each data block
         for i in range(len(self.data)):
 
-            # parse the data (initializes/creates data structure in parser)
-            self.p.parse(self.data[i][0])
-
             # get the path and add to the list
-            a.append(self.p.get_path(self.data[i][1][param]))
+            a.append(self.p.get_path(block=self.data[i][0], text=self.data[i][1][param]))
 
         # test equality and print results
         if all_same(a):

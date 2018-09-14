@@ -22,7 +22,7 @@ class CSVStorage:
         self.fname = fname
 
         # format and sort the keys
-        self.keys = [i for i in keys]
+        self.keys = keys
         self.keys.sort()
 
 
