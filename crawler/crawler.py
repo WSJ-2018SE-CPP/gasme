@@ -13,6 +13,7 @@ Date: 09/11/2018
 import urllib.request
 from parser.parser import Parser
 from storage.csv import CSVStorage
+from random import randint
 import time
 
 
@@ -65,7 +66,7 @@ class Crawler:
                 res = self._search(city, gas_station)
 
                 # politeness sleeping, TODO: optimize
-                time.sleep(self.sleep_time)
+                time.sleep(randint(15, 60))
 
                 # store the results
                 self.storage.store(res)

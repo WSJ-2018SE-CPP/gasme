@@ -40,6 +40,10 @@ class CSVStorage:
         # for each row in the data
         for row in data:
 
+            # do not store if the row is not valid
+            if not self._verify_data(row):
+                continue
+
             # new line
             s += '\n'
 
@@ -61,5 +65,36 @@ class CSVStorage:
 
             # write the data
             f.write(s)
+
+
+    def _verify_data(self, data):
+        """
+        Tests if the data is acceptable to store.
+
+        Args:
+          data: the data
+
+        Returns:
+          True if the data is acceptable, false otherwise
+        """
+
+        if data['address'] is None:
+            return False
+
+        if data['brand'] is None:
+            return False
+
+        if data['lat'] is None:
+            return False
+
+        if data['lon'] is None:
+            return False
+
+        if data['price_1'] is None:
+            return False
+
+        return True
+
+
 
 

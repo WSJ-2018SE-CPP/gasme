@@ -6,8 +6,13 @@ Date: 09/11/2018
 
 from crawler import Crawler
 
+cities = []
 
-#x = Crawler(cities=['Pomona, CA', 'Covina, CA', 'Diamond Bar, CA', 'Ontario, CA'], gas_stations=['all','76', 'Chevron', 'ARCO', 'Shell', 'Mobil'])
-x = Crawler(cities=['Pomona, CA', 'Covina, CA', 'Eugene, OR', 'Orlando, FL'], gas_stations=['all', '76'])
+with open('./cities/CA.csv', 'r') as f:
+    for city in f:
+        cities.append(city.strip())
+
+
+x = Crawler(cities=cities, gas_stations=['all'], sleep_time=30)
 
 x.crawl()
