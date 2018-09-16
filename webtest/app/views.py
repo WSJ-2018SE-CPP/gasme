@@ -30,7 +30,3 @@ def about():
 @app.route('/contact')
 def contact():
     return render_template("contactus.html")
-
-@app.route('/result')
-def result():
-	return render_template("result.html")
