@@ -3,6 +3,7 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
 {% block body %}
+
 <div class="jumbotron">
   <h1>GasMe</h1>
   <p class="lead">Helping You Save Money on Gas!</p>
@@ -10,17 +11,52 @@
 
 <form action="" method="post" novalidate>
 	{{ form.hidden_tag() }}
-	<div>
-		{{ form.origin.label }} <br>
-		{{ form.origin(class="form-group", size=40) }}
+	<div class = "form-group">
+		<div>
+			{{ form.origin.label }} <br>
+			{{ form.origin(size=40) }}
+		</div>
+		<div>
+			{{ form.destination.label }} <br>
+			{{ form.destination(size=40) }}
+		</div>
+		<div>
+			{{ form.brand.label }} <br>
+			{{ form.brand() }}
+		</div>
+		<div>
+		{{ form.submit(class_="btn btn-primary") }} 
+		</div>
 	</div>
-	<div>
-		{{ form.destination.label }} <br>
-		{{ form.destination(class_="form-group",size=40) }}
+	
+	<div class = "form-group">		
+		<div>
+			{{ form.currentTankLevel.label }} <br>
+			{{ form.currentTankLevel() }}
+		</div>
+		<div id = "cartype">
+			{{ form.carBrand.label }}
+			{{ form.carBrand() }}
+		
+			{{ form.carModel.label }} 
+			{{ form.carModel() }}
+		
+			{{ form.carYear.label }} 
+			{{ form.carYear() }}
+		</div>
+		
+		<div id = "cartype">
+			{{ form.cityMPG.label }}
+			{{ form.cityMPG() }}
+		
+			{{ form.highwayMPG.label }} 
+			{{ form.highwayMPG() }}
+		
+			{{ form.tankCapacity.label }} 
+			{{ form.tankCapacity() }}
+		</div>
 	</div>
-	<div>
-	{{ form.submit(class_="btn btn-primary") }} 
-	</div>
+	
 </form>  
 
 <script>
