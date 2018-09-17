@@ -9,9 +9,11 @@
   <p class="lead">Helping You Save Money on Gas!</p>
 </div>
 
+
 <form action="" method="post" novalidate>
 	{{ form.hidden_tag() }}
-	<div class = "form-group">
+	<div class = "row">
+	<div class="col-sm-6">
 		<div>
 			{{ form.origin.label }} <br>
 			{{ form.origin(size=40) }}
@@ -24,12 +26,9 @@
 			{{ form.brand.label }} <br>
 			{{ form.brand() }}
 		</div>
-		<div>
-		{{ form.submit(class_="btn btn-primary") }} 
-		</div>
 	</div>
 	
-	<div class = "form-group">		
+	<div class="col-sm-6">		
 		<div>
 			{{ form.currentTankLevel.label }} <br>
 			{{ form.currentTankLevel() }}
@@ -45,7 +44,7 @@
 			{{ form.carYear() }}
 		</div>
 		
-		<div id = "cartype">
+		<div id = "carstats">
 			{{ form.cityMPG.label }}
 			{{ form.cityMPG() }}
 		
@@ -56,7 +55,10 @@
 			{{ form.tankCapacity() }}
 		</div>
 	</div>
-	
+	</div>
+	<div>
+		{{ form.submit(class_="btn btn-primary") }} 
+	</div>
 </form>  
 
 <script>
