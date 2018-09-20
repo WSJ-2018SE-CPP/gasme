@@ -1,11 +1,15 @@
-# views.py
+# run.py
 
-from flask import render_template, flash, redirect, request
+from webtest.forms import TripForm
+from webtest.geo import getInfo, getRoute
+from flask import Flask, render_template, flash, redirect, request
 
-from app import app
-from app.forms import TripForm
-from app.geo import getInfo, getRoute
+from config import Config
 
+app = Flask(__name__)
+app.config.from_object(Config)
+
+#Main page, produce form, receive value inserted in form, pass the result.html
 @app.route('/', methods = ['GET', 'POST'])
 def index():
     form = TripForm()
@@ -30,3 +34,6 @@ def about():
 @app.route('/contact')
 def contact():
     return render_template("contactus.html")
+    
+if __name__ == '__main__':
+    app.run()
