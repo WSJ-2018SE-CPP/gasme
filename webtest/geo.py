@@ -1,6 +1,6 @@
 #geo.py
 
-import urllib.request
+import urllib
 import requests
 
 def getInfo(address):

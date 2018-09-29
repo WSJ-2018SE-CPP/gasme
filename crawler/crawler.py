@@ -12,17 +12,15 @@ Date: 09/11/2018
 
 import urllib.request
 from parser.parser import Parser
-from storage.csv import CSVStorage
 from random import randint
 import time
-
 
 class Crawler:
     """
     A Crawler class for crawling GoogleMaps gas station prices.
     """
 
-    def __init__(self, cities, gas_stations, sleep_time=5):
+    def __init__(self, cities, gas_stations, storage, min_sleep_time=15, max_sleep_time=60):
         """
         Initializes a crawler.
 
@@ -39,7 +37,8 @@ class Crawler:
         self.gas_stations = gas_stations
 
         # sleep time 
-        self.sleep_time = sleep_time
+        self.min_sleep_time = min_sleep_time
+        self.max_sleep_time = max_sleep_time
 
         # parser for the gas station blocks
         self.parser = Parser()
@@ -48,7 +47,7 @@ class Crawler:
         self.params = ['address', 'brand', 'lat', 'lon', 'price_1', 'price_2', 'price_3']
 
         # storage medium
-        self.storage = CSVStorage(fname='./storage/test.csv', keys=self.params)
+        self.storage = storage
 
 
     def crawl(self):
@@ -59,17 +58,23 @@ class Crawler:
         # for each city
         for city in self.cities:
 
+            # store data per city so less connections to db made
+            data = []
+
             # for each gas station
             for gas_station in self.gas_stations:
 
                 # search the area
                 res = self._search(city, gas_station)
 
-                # politeness sleeping, TODO: optimize
-                time.sleep(randint(15, 60))
+                # politeness sleeping within a random range, so we don't seem like a robot
+                time.sleep(randint(self.min_sleep_time, self.max_sleep_time))
 
-                # store the results
-                self.storage.store(res)
+                # append the results
+                data.append(res)
+
+            # store the results
+            self.storage.store_data(res)
 
     
     def _search(self, city, gas_station):
