@@ -1,7 +1,8 @@
 # run.py
 
 from webtest.forms import TripForm
-from webtest.geo import getInfo, getRoute
+from webtest.geo import getInfo, getDistance
+from webtest.trip import Trip
 from flask import Flask, render_template, flash, redirect, request
 
 from config import Config
@@ -18,12 +19,19 @@ def index():
     	form = TripForm()
     	
     	origin = request.form.get('origin')
-    	origin = getInfo(origin)
     	destination = request.form.get('destination')
-    	destination = getInfo(destination)
-    	trip = getRoute(origin['address'], destination['address'])
+    	gb = request.form.get('brand')
+    	cb = request.form.get('carBrand')
+    	cm = request.form.get('carModel')
+    	cy = request.form.get('carYear')
+    	hc = request.form.get('highwayMPG')
+    	cc = request.form.get('cityMPG')
+    	tc = request.form.get('tankCapacity')
+    	igl = request.form.get('currentTankLevel')
+
+    	t = Trip(origin, destination, "", gb, cb, cm, cy, hc, cc, tc, igl)
     	return render_template('result.html', result=result, form=form,
-    		origin=origin, destination=destination, trip=trip)
+    		origin=t.origin, destination=t.dest, distance=t.distance, duration=t.duration, route=t.route)#, trip=trip)
     return render_template("index.html", title='Trip Form', form=form)
 
 

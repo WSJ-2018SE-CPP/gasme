@@ -96,10 +96,6 @@
 </form>
 
 <div>
-	Trip: {{trip.distance}},{{trip.duration}}
-</div>
-	
-<div>
 	<table class="table">    
 			<tr>
 				<th> Result </th>
@@ -113,7 +109,7 @@
                <td> {{ origin.place_id }} </td>
                <td> {{ origin.address }} </td>
                <td> {{ origin.name }} </td>
-               <td> {{ origin.long }} </td>
+               <td> {{ origin.log }} </td>
                <td> {{ origin.lat }} </td>
 
             </tr>
@@ -122,11 +118,17 @@
                <td> {{ destination.place_id }} </td>
                <td> {{ destination.address }} </td>
                <td> {{ destination.name }} </td>
-               <td> {{ destination.long }} </td>
+               <td> {{ destination.log }} </td>
                <td> {{ destination.lat }} </td>
             </tr>
             <tr>
     </table>
+</div>
+
+<div>
+	Duration: {{duration}} 
+	Distance: {{distance}}
+	Route: {{route}}
 </div>
 
 <div id="map"></div>
