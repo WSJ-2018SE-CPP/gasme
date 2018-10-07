@@ -5,6 +5,7 @@ class User:
 		self.gas_brand = gb
 		self.car = Car(cb, cm, cy, hc, cc, tc, igl)
 	
+	# Getters
 	def getCar():
 		return self.car
 		

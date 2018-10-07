@@ -1,7 +1,6 @@
 # run.py
 
 from webtest.forms import TripForm
-from webtest.geo import getInfo, getDistance
 from webtest.trip import Trip
 from flask import Flask, render_template, flash, redirect, request
 

@@ -1,6 +1,7 @@
 from user import User
 from location import Location
-from geo import getDistance, getRoute
+from p2p_route import P2p_route
+from geo import getDistanceDuration, getRoute
 
 class Trip:
 	def __init__(self, origin, dest, stops, gb, cb, cm, cy, hc, cc, tc, igl):
@@ -8,26 +9,73 @@ class Trip:
 		self.dest = Location(dest)
 		self.stops = stops
 		self.user = User(gb, cb, cm, cy, hc, cc, tc, igl)
-		#self.route
-		#self.final_routes
-		self.test(self.origin, self.dest)
-		self.test2(self.origin, self.dest)
+		
+		stop_points = self.getStopPointsLocation(self.origin, self.dest)
+		self.route = [P2p_route for x in range(len(stop_points))]
+		for x in range(0, len(stop_points)):
+			self.route[x] = P2p_route(stop_points[x]["origin_lat"], 
+									stop_points[x]["origin_log"],
+									stop_points[x]["destination_lat"],
+									stop_points[x]["destination_log"],
+									stop_points[x]["duration"],
+									stop_points[x]["distance"])
+		
+		#Example on how to get stop points using Address/LongLat with GoogleMap Direction API
+		stop_points2 = self.getStopPointsAddress(self.origin.address, self.dest.address)
+		stop_points3 = self.getStopPointsLogLat(self.origin.log, self.origin.lat, self.dest.log, self.dest.lat)
 
-	 
-	def test(self, start, stop):
-		distance = getDistance(start.address , stop.address)
-		self.distance = distance["distance"]
-		self.duration = distance["duration"]
+		#Example on how to get distance/duration using Address/LongLat/Location with GoogleMap Distance Matrix API			
+		disdur1 = self.calRouteLogLat(self.origin.log, self.origin.lat, self.dest.log, self.dest.lat)
+		disdur2 = self.calRouteAddress(self.origin.address, self.dest.address)
+		disdur3 = self.calRouteLocation(self.origin, self.dest)
+		disdur4 = self.calRouteLogLat(self.route[0].start_log, self.route[0].start_lat, self.dest.log, self.dest.lat)
+
+		self.distance = disdur4["distance"]
+		self.duration = disdur4["duration"]
+
+
+	#Functions to calculate distance & duration between points given Log/Lat, Location, or Address of Origin 
+	#and Destination by utilizing Google Map Distance Matrix API
+	#To access duration => disdur["duration"]
+	#To access distance => disdur["distance"]
+	def calRouteLogLat(self, startlog, startlat, stoplog, stoplat):
+		disdur = getDistanceDuration(str(startlat)+','+str(startlog), str(stoplat)+','+str(stoplog))
+		return disdur
+		
+	def calRouteAddress(self, start, stop):
+		disdur = getDistanceDuration(start , stop)
+		return disdur
 	
-	def test2(self, start, stop):
-		route = getRoute(start.address , stop.address)
-		self.route = route
-				
+	def calRouteLocation(self, start, stop):
+		disdur = getDistanceDuration(start.address , stop.address)
+		return disdur
+	
+	#Functions to calculate stop points between points given Log/Lat, Location, or Address of Origin 
+	#and Destination by utilizing Google Map Directions API
+	#To access each small "route", use stop_points[x], where x is 0 to len(stop_points)
+	#To access a "route" instruction => stop_points[x]["instruction"]
+	#To access a "route" duration => stop_points[x]["duration"]
+	#To access a "route" distance => stop_points[x]["distance"]
+	#To access a "route" origin latitude => stop_points[x]["origin_lat"]
+	#To access a "route" destination latitude => stop_points[x]["destination_lat"]
+	#To access a "route" origin longitude => stop_points[x]["origin_log"]
+	#To access a "route" destination longitude => stop_points[x]["destination_log"]	
+	
+	def getStopPointsLogLat(self, startlog, startlat, stoplog, stoplat):
+		stop_points = getRoute(str(startlat)+','+str(startlog), str(stoplat)+','+str(stoplog))
+		return stop_points
+	
+	def getStopPointsAddress(self, start, stop):
+		stop_points = getRoute(start , stop)
+		return stop_points
+		
+	def getStopPointsLocation(self, start, stop):
+		stop_points = getRoute(start.address , stop.address)
+		return stop_points
+					
+	
 	def intialRoutes(self, origin, dest, user):
 		return 0
 		
 	def findRoute(self, origin, dest, routes):
-		return 0
-		
-	def calRoute(self, final_routes):
 		return 0

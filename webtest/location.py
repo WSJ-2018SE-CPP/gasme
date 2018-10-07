@@ -9,6 +9,10 @@ class Location:
 		self.address = location["address"]
 		self.gas_price_per_gal = gasprice
 	
+	# Getters
+	def getName():
+		return self.name
+	
 	def getAddress():
 		return self.address
 		

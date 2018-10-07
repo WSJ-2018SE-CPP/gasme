@@ -1,11 +1,31 @@
 from location import Location
 
+
 class P2p_route:
-	def __init__(self, start, end, ml, mh, ttl, tth):
-		self.start = start
-		self.end = end
+	def __init__(self, olat, olog, dlat, dlog, duration, distance):
+		self.start_lat = olat
+		self.start_log = olog
+		self.end_lat = dlat
+		self.end_log = dlog
+		self.travel_time = duration
+		self.mileage = distance
+	
+	
+	# Getters 
+	def getStartLat():
+		return self.start_lat
 		
-		self.mileage_local = ml
-		self.mileage_hwy = mh
-		self.travel_time_local = ttl
-		self.travel_time_hwy = tth
+	def getStartLog():
+		return self.start_log
+
+	def getEndLat():
+		return self.end_lat
+	
+	def getEndLog():
+		return self.end_log
+	
+	def getTravelTime():
+		return self.travel_time
+		
+	def getMileage():
+		return self.mileage

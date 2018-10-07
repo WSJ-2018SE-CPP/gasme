@@ -31,7 +31,7 @@ def getInfo(address):
 
 	return geodata
 
-def getDistance(origin, destination):
+def getDistanceDuration(origin, destination):
 	GOOGLE_MAPS_API_URL = 'https://maps.googleapis.com/maps/api/distancematrix/json'
 	params = {
 		'units' : 'imperial',
@@ -70,11 +70,20 @@ def getRoute(origin, destination):
 		route = res['routes'][0]['legs'][0]['steps']
 	else:
 		route = 0
+		
+	routes = [dict() for x in range(len(route))]
 
-	routes = ""
 	for x in range(0, len(route)):
-		routes = routes + route[x]['html_instructions'] + ','
-		routes = routes + route[x]['duration']['text'] + ','		
-		routes = routes + route[x]['distance']['text'] + '    |||     '
+		routes[x]['instruction'] = route[x]['html_instructions']
+		routes[x]['duration'] = route[x]['duration']['text'] 
+		routes[x]['distance'] = route[x]['distance']['text'] 
+		routes[x]['origin_lat'] = route[x]['start_location']['lat']
+		routes[x]['destination_lat'] = route[x]['end_location']['lat']
+		routes[x]['origin_log'] = route[x]['start_location']['lng']
+		routes[x]['destination_log'] = route[x]['end_location']['lng']
+
+		#routes = routes + route[x]['html_instructions'] + ','
+		#routes = routes + route[x]['duration']['text'] + ','		
+		#routes = routes + route[x]['distance']['text'] + '    |||     '
 				
 	return routes
