@@ -31,7 +31,7 @@ def getInfo(address):
 
 	return geodata
 
-def getRoute(origin, destination):
+def getDistanceDuration(origin, destination):
 	GOOGLE_MAPS_API_URL = 'https://maps.googleapis.com/maps/api/distancematrix/json'
 	params = {
 		'units' : 'imperial',
@@ -50,5 +50,40 @@ def getRoute(origin, destination):
 	else:
 		trip['distance'] = res['rows'][0]['elements'][0]['distance']['text']
 		trip['duration'] = res['rows'][0]['elements'][0]['duration']['text']
-	
+	#need to check if route too far
 	return trip
+
+def getRoute(origin, destination):
+	GOOGLE_MAPS_API_URL = 'https://maps.googleapis.com/maps/api/directions/json'
+	params = {
+		'origin' : origin,
+		'destination' : destination,
+		'key': 'AIzaSyDaB2geFvRw5ZEfxXl8jU1VBxi8-TNL-IY'
+	}
+	
+	req = requests.get(GOOGLE_MAPS_API_URL, params=params)
+	res = req.json()
+	
+	route = dict()
+	
+	if res['status'] == 'OK':
+		route = res['routes'][0]['legs'][0]['steps']
+	else:
+		route = 0
+		
+	routes = [dict() for x in range(len(route))]
+
+	for x in range(0, len(route)):
+		routes[x]['instruction'] = route[x]['html_instructions']
+		routes[x]['duration'] = route[x]['duration']['text'] 
+		routes[x]['distance'] = route[x]['distance']['text'] 
+		routes[x]['origin_lat'] = route[x]['start_location']['lat']
+		routes[x]['destination_lat'] = route[x]['end_location']['lat']
+		routes[x]['origin_log'] = route[x]['start_location']['lng']
+		routes[x]['destination_log'] = route[x]['end_location']['lng']
+
+		#routes = routes + route[x]['html_instructions'] + ','
+		#routes = routes + route[x]['duration']['text'] + ','		
+		#routes = routes + route[x]['distance']['text'] + '    |||     '
+				
+	return routes
