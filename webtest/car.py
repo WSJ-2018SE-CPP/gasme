@@ -8,14 +8,14 @@ class Car:
 		self.tank_capacity = tc
 		self.initial_gas_level = igl
 	
-	def getHwyConsumption():
+	def getHwyConsumption(self):
 		return self.highway_consumption
 		
-	def getCityConsumption():
+	def getCityConsumption(self):
 		return self.city_consumption
 		
-	def getTankCapacity():
+	def getTankCapacity(self):
 		return self.tank_capacity
 		
-	def getInitialGasLevel():
+	def getInitialGasLevel(self):
 		return self.initial_gas_level

@@ -12,20 +12,26 @@ class P2p_route:
 	
 	
 	# Getters 
-	def getStartLat():
+	def getStartLat(self):
 		return self.start_lat
 		
-	def getStartLog():
+	def getStartLog(self):
 		return self.start_log
 
-	def getEndLat():
+	def getEndLat(self):
 		return self.end_lat
 	
-	def getEndLog():
+	def getEndLog(self):
 		return self.end_log
 	
-	def getTravelTime():
+	def getTravelTime(self):
 		return self.travel_time
 		
-	def getMileage():
+	def getMileage(self):
 		return self.mileage
+		
+	def to_json(self):
+		return {
+			'start_lat': self.start_lat,
+			'start_log': self.start_log,
+		}

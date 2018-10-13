@@ -6,8 +6,8 @@ class User:
 		self.car = Car(cb, cm, cy, hc, cc, tc, igl)
 	
 	# Getters
-	def getCar():
+	def getCar(self):
 		return self.car
 		
-	def getGasBrand():
+	def getGasBrand(self):
 		return self.gas_brand

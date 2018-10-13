@@ -1,5 +1,5 @@
 # run.py
-
+import json
 from webtest.forms import TripForm
 from webtest.trip import Trip
 from flask import Flask, render_template, flash, redirect, request
@@ -29,8 +29,10 @@ def index():
     	igl = request.form.get('currentTankLevel')
 
     	t = Trip(origin, destination, "", gb, cb, cm, cy, hc, cc, tc, igl)
+    	stops = t.findRoute(t.origin, t.dest)
     	return render_template('result.html', result=result, form=form,
-    		origin=t.origin, destination=t.dest, distance=t.distance, duration=t.duration, route=t.route)#, trip=trip)
+    		origin=t.origin, destination=t.dest, distance=t.distance, duration=t.duration, 
+    		route=stops)
     return render_template("index.html", title='Trip Form', form=form)
 
 

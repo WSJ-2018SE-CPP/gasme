@@ -149,9 +149,23 @@ var map;
       }
 
       function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+        var waypts = [];
+        
+		{% for item in route[1:] %}
+		var loc = '{{item}}';
+		var location1 = new google.maps.LatLng('{{item.start_lat}}', '{{item.start_log}}');    
+		waypts.push({
+              location: location1,
+              stopover: true
+        });
+		
+		{% endfor %}
+		
         directionsService.route({
           origin:'{{origin.address}}',
           destination:'{{destination.address}}',
+          waypoints: waypts,
+          optimizeWaypoints: true,
           travelMode: 'DRIVING'
         }, function(response, status) {
           if (status === 'OK') {

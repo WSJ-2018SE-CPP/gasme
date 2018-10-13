@@ -10,6 +10,7 @@ class Trip:
 		self.stops = stops
 		self.user = User(gb, cb, cm, cy, hc, cc, tc, igl)
 		
+		#Initial Route
 		stop_points = self.getStopPointsLocation(self.origin, self.dest)
 		self.route = [P2p_route for x in range(len(stop_points))]
 		for x in range(0, len(stop_points)):
@@ -76,6 +77,10 @@ class Trip:
 	
 	def intialRoutes(self, origin, dest, user):
 		return 0
-		
-	def findRoute(self, origin, dest, routes):
-		return 0
+	
+	#for calculating final route, returns an array of location for stop points
+	def findRoute(self, origin, dest, stops = "", brand = "", mpg = "", tankcapacity = "", initialtank = ""):
+		#CALL ALGORITHM HERE
+	
+		#for example, the route returned is initial route
+		return self.route

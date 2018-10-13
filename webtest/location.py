@@ -10,17 +10,17 @@ class Location:
 		self.gas_price_per_gal = gasprice
 	
 	# Getters
-	def getName():
+	def getName(self):
 		return self.name
 	
-	def getAddress():
+	def getAddress(self):
 		return self.address
 		
-	def getLog():
+	def getLog(self):
 		return self.log
 		
-	def getLat():
+	def getLat(self):
 		return self.lat
 		
-	def getGasPrice():
+	def getGasPrice(self):
 		return self.gas_price_per_gal
