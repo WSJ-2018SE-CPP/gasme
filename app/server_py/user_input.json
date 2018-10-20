@@ -2,11 +2,11 @@
     "car":{
       "car_brand": "Toyota",
       "car_model": "Camry",
-      "car-year": "2010",
-      "highway-consumption":  "33",
-      "city-consumption": "22",
-      "tank-capacity":"18.5",
-      "initial-gas-level": "100.0",
+      "car_year": "2010",
+      "highway_consumption":  "33",
+      "city_consumption": "22",
+      "tank_capacity":"18.5",
+      "initial_gas_level": "100.0",
       "default":"0"
     },
     "gas":{
