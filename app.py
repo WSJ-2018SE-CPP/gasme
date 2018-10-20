@@ -49,18 +49,10 @@ def index():
     						  destination = destination,
     						  tank_capacity = 300)
     	
-    	locations = [dict() for x in range(len(route))]
-    	
-    	i = 0			  
-    	for location in route:
-    		loc = getInfo(location.address)	
-    		locations[i]["start_lat"] = loc["lat"]
-    		locations[i]["start_log"] = loc["long"]
-    		i = i + 1
     	for location in route:
     		print(location.address)
     		
-    	return render_template('result.html', result=result, form=form, origin=t.origin, destination=t.dest, distance=t.distance, duration=t.duration, route=locations[:-1])
+    	return render_template('result.html', result=result, form=form, origin=t.origin, destination=t.dest, distance=t.distance, duration=t.duration, route=route[:-1])
     return render_template("index.html", title='Trip Form', form=form)
 
 
