@@ -58,23 +58,29 @@ class Crawler:
         # for each city
         for city in self.cities:
 
-            # store data per city so less connections to db made
-            data = []
+            # catch error
+            try:
 
-            # for each gas station
-            for gas_station in self.gas_stations:
+                # store data per city so less connections to db made
+                data = []
 
-                # search the area
-                res = self._search(city, gas_station)
+                # for each gas station
+                for gas_station in self.gas_stations:
 
-                # politeness sleeping within a random range, so we don't seem like a robot
-                time.sleep(randint(self.min_sleep_time, self.max_sleep_time))
+                    # search the area
+                    res = self._search(city, gas_station)
 
-                # append the results
-                data.append(res)
+                    # politeness sleeping within a random range, so we don't seem like a robot
+                    time.sleep(randint(self.min_sleep_time, self.max_sleep_time))
 
-            # store the results
-            self.storage.store_data(res)
+                    # append the results
+                    data.append(res)
+
+                # store the results
+                self.storage.store_data(res)
+
+            except Exception as e:
+                print(e)
 
     
     def _search(self, city, gas_station):
