@@ -1,10 +1,19 @@
 # run.py
 import json
-from webtest.forms import TripForm
-from webtest.trip import Trip
+from trip.forms import TripForm
+from trip.trip import Trip
 from flask import Flask, render_template, flash, redirect, request
-
 from config import Config
+import argparse
+
+# argument parser for password
+parser = argparse.ArgumentParser(description='Supply the password.')
+parser.add_argument('-p',
+            dest='password',
+            required=True,
+            type=str,
+            help='the rds password')
+args = parser.parse_args()
 
 app = Flask(__name__)
 app.config.from_object(Config)

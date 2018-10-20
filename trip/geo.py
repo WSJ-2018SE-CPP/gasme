@@ -15,21 +15,16 @@ def getInfo(address):
 	req = requests.get(GOOGLE_MAPS_API_URL, params=params)
 	res = req.json()
 	
-	geodata = dict()
-	if res['status'] == 'ZERO_RESULTS':
-		geodata['address'] = 'NOT FOUND'
-		geodata['lat'] = 'NOT FOUND'
-		geodata['long'] = 'NOT FOUND'
-		geodata['name'] = 'NOT FOUND'
-		geodata['place_id'] = 'NOT FOUND'
-	else:
+	if res['status'] != 'ZERO_RESULTS':
+		geodata = dict()
 		geodata['address'] = res['candidates'][0]['formatted_address']
 		geodata['lat'] = res['candidates'][0]['geometry']['location']['lat']
 		geodata['long'] = res['candidates'][0]['geometry']['location']['lng']
 		geodata['name'] = res['candidates'][0]['name']
 		geodata['place_id'] = res['candidates'][0]['place_id']
-
-	return geodata
+		return geodata
+	else:
+		raise Exception("Could not get data for address: %s" % address)
 
 def getDistanceDuration(origin, destination):
 	GOOGLE_MAPS_API_URL = 'https://maps.googleapis.com/maps/api/distancematrix/json'
@@ -87,3 +82,15 @@ def getRoute(origin, destination):
 		#routes = routes + route[x]['distance']['text'] + '    |||     '
 				
 	return routes
+	
+
+def getEuclideanDistance(l1, l2):
+	"""
+	Gets the Euclidean distance between two points represented at (lat, long)
+	
+	Args:
+	  l1: (lat, long) for the first point
+	  l2: (lat, long) for the second point
+	Return:
+	  The Euclidea distance between the two points.
+	"""
