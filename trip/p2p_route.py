@@ -1,4 +1,4 @@
-from location import Location
+from trip.location import Location
 
 
 class P2p_route:

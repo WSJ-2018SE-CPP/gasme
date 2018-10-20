@@ -2,6 +2,7 @@
 import json
 from trip.forms import TripForm
 from trip.trip import Trip
+from trip.trip_calculator.trip_calculator import calculate_trip
 from flask import Flask, render_template, flash, redirect, request
 from config import Config
 import argparse
@@ -37,15 +38,17 @@ def index():
     	tc = request.form.get('tankCapacity')
     	igl = request.form.get('currentTankLevel')
 		
-		# trip = [Location, Location, ..., Location]
+		# route = [Location, Location, ..., Location]
 		# where trip[0]    = origin
 		#       trip[-1]   = destination
 		#       trip[1:-1] = gas stations
-    	trip = calculate_trip(password = args.password,
+    	route = calculate_trip(password = args.password,
     						  origin = "1000 Vin Scully Ave, Los Angeles, CA 90012",
     						  destination = "4 Yawkey Way, Boston, MA 02215",
     						  tank_capacity = 300)
-    	
+    	for location in route:
+    		print(location.address)
+		
     	return render_template('result.html', result=result, form=form,
     		origin=t.origin, destination=t.dest, distance=t.distance, duration=t.duration, 
     		route=stops)

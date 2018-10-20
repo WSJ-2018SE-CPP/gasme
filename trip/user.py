@@ -1,4 +1,4 @@
-from car import Car
+from trip.car import Car
 
 class User:
 	def __init__(self, gb, cb, cm, cy, hc, cc, tc, igl):

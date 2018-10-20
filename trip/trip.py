@@ -1,7 +1,7 @@
-from user import User
-from location import Location
-from p2p_route import P2p_route
-from geo import getDistanceDuration, getRoute
+from trip.user import User
+from trip.location import Location
+from trip.p2p_route import P2p_route
+from trip.geo import getDistanceDuration, getRoute
 
 class Trip:
 	def __init__(self, origin, dest, stops, gb, cb, cm, cy, hc, cc, tc, igl):
