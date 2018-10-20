@@ -22,23 +22,24 @@ class TripCost extends Component {
 		//this.postItems();
 	}
 
-	// postItems() {
-	// 	console.log('posting to python');
-	// 	fetch('http://localhost:5000', {
-	// 		method: 'post',
-	// 		//mode: 'no cors',
-	// 		headers: {
-	// 			Accept: 'application/json, text/plain, */*',
-	// 			'Content-Type': 'application/json'
-	// 		},
-	// 		body: JSON.stringify({ a: 7, str: 'Some string: &=&' })
-	// 	})
-	// 		.then((res) => res.json())
-	// 		.then((res) => console.log(res));
-	// }
-
-	//in testing with flask
 	postItems() {
+		console.log('posting to python');
+		fetch('http://localhost:5000', {
+			method: 'post',
+			//mode: 'no cors',
+			headers: {
+				Accept: 'application/json, text/plain, */*',
+				'Content-Type': 'application/json'
+			},
+			//body: JSON.stringify({ a: 7, str: 'Some string: &=&' })
+			body: JSON.stringify(this.state.trip)
+		})
+			.then((res) => res.json())
+			.then((res) => console.log(res));
+	}
+
+	//in testing with flask, not working
+	postItems_notworking() {
 		console.log('posting to python');
 		axios({
 			method: 'post',
@@ -83,12 +84,12 @@ class TripCost extends Component {
 	render() {
 		return (
 			<div className="container">
-				{/* <h1>Blockchain Voter</h1>
+				{/* <h1>Blockchain Voter</h1>*/}
 				<button onClick={() => this.getItems()}>getFromPython</button>
 				<button onClick={() => this.postItems()}>check terminal</button>
-
+				
 				<p>{this.state.pyResp.orig}</p>
-				<p>{this.state.pyResp.dest}</p> */}
+				<p>{this.state.pyResp.dest}</p> 
 
 				{/* <form id="postData">
 					<div>
@@ -106,7 +107,7 @@ class TripCost extends Component {
 
 					<InfoWindow onClose={this.onInfoWindowClose}>
 						<div>
-							<h1>{this.state.selectedPlace.name}</h1>
+							{/* <h1>{this.state.selectedPlace.name}</h1> */}
 						</div>
 					</InfoWindow>
 				</Map>
