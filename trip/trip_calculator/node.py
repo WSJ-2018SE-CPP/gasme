@@ -17,6 +17,27 @@ class Node:
 		
 		self.state = state
 		self.parent = parent
-		self.cost = 0 if parent is None else parent.cost + cost
+		self.cost = cost
 		self.depth = 0 if parent is None else parent.depth + 1
+	
+	
+	def __lt__(self, other):
+		return self.cost < other.cost
+	
+	
+	def get_route(self):
+		"""
+		Backtrack to get the route to this node.
 		
+		Return:
+		  A list of Location to this node, including this node.
+		"""
+		
+		route = []
+		
+		n = self
+		while n is not None:
+			route.insert(0, n.state)
+			n = n.parent
+		
+		return route

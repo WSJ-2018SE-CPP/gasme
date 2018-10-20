@@ -12,6 +12,8 @@ parser.add_argument('-p',
 args = parser.parse_args()
 
 if __name__ == '__main__':
-	origin = "3421 Loreto Drive, San Ramon, CA 94583"
-	destination = "270 E Orlando Way, Covina, CA, 91723"
-	calculate_trip(args.password, origin, destination)
+	origin = "1000 Vin Scully Ave, Los Angeles, CA 90012"
+	destination = "4 Yawkey Way, Boston, MA 02215"
+	route = calculate_trip(args.password, origin, destination)
+	for location in route:
+		print(location.address)

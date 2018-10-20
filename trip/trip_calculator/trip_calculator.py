@@ -5,17 +5,17 @@ Trip Cost Calculator.
 from trip.location import Location
 from trip.geo import getInfo
 from trip.trip_calculator.node import Node
+from trip.trip_calculator.grid import Grid
 from geopy.distance import vincenty
 import pymysql
 from math import ceil
+from heapq import heappush, heappop
 
 # database information
 host="gasme-db.cusrpulgblsj.us-west-1.rds.amazonaws.com"
 port=3306
 dbname='gasme'
 user='gasme'
-
-
 
 def calculate_trip(password: str, origin: str, destination: str, tank_capacity=300):
 	"""
@@ -73,25 +73,44 @@ def calculate_trip(password: str, origin: str, destination: str, tank_capacity=3
 		return None
 	
 	# square grid based on tank capacity
-	top_left     = (N, W)
-	top_right    = (N, E)
-	bottom_left  = (S, W)
-	bottom_right = (S, E)
-	width = max(vincenty(top_left, top_right).miles, vincenty(bottom_left, bottom_right).miles)
-	height = max(vincenty(top_left, bottom_left).miles, vincenty(top_right, bottom_right).miles)
-	grid = [[[] for _ in range(ceil(width/tank_capacity))] for _ in range(ceil(height/tank_capacity))]
-	for gas_station in gas_stations:
-		lat = gas_station.lat
-		lon = gas_station.lon
-		row = int(vincenty((lat, lon), (N, lon)).miles/tank_capacity)
-		col = int(vincenty((lat, lon), (lat, W)).miles/tank_capacity)
-		grid[row][col].append(gas_station)
+	grid = Grid(destination, tank_capacity, N, S, E, W)
+	grid.set_grid(gas_stations)
 	
 	# frontier and explored states for A* search
-	frontier = [Node(state=origin, parent=None, cost=0)]
-	explored = [origin]
+	frontier = []
+	heappush(frontier, Node(state=origin,
+							parent=None,
+							cost=vincenty((origin.lat, origin.lon),
+									(destination.lat, destination.lon)).miles))
+	explored = []
 	
-	print(ceil(width / tank_capacity))
-	print(ceil(height / tank_capacity))
-	
+	# search
+	while True:
+		
+		# return if frontier is empty
+		if len(frontier) == 0:
+			return None
+		
+		# get cost and node of the next element in the frontier
+		node = heappop(frontier)
+		
+		# return if destination within range
+		distanceDestination = vincenty((node.state.lat, node.state.lon),
+									(destination.lat, destination.lon)).miles
+		if distanceDestination <= tank_capacity:
+			route = node.get_route()
+			route.append(destination)
+			return route
+		
+		# add state of node to explored
+		explored.append(node.state)
+		
+		# for each neighboring station, add to frontier if state not already explored
+		for distanceTraveled, distanceDestination, newState in grid.get_neighbors(node.state):
+			if newState not in explored:
+				heappush(frontier, Node(
+								state=newState,
+								parent=node,
+								cost=distanceDestination))
+		
 
