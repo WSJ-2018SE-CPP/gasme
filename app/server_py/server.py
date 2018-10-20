@@ -5,12 +5,12 @@ app = Flask(__name__, static_url_path = "")
 CORS(app)
 
 @app.route('/', methods = ['GET'])
-def get_json_from_frontend():
+def json_to_frontend():
     return jsonify({"orig": "loc1", "dest":"loc2"})
 
 
 @app.route('/', methods = ['POST'])
-def post_json_to_frontend():
+def json_from_frontend():
     if request.json:
         print(request.json)
     return jsonify("fetch from frontend to python")
