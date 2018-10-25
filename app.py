@@ -3,6 +3,7 @@ import json
 from trip.forms import TripForm
 from trip.trip import Trip
 from trip.trip_calculator.trip_calculator import calculate_trip
+from trip.geo import getInfo
 from flask import Flask, render_template, flash, redirect, request
 from config import Config
 import argparse
@@ -37,21 +38,21 @@ def index():
     	cc = request.form.get('cityMPG')
     	tc = request.form.get('tankCapacity')
     	igl = request.form.get('currentTankLevel')
-		
+    	t = Trip(origin, destination, "", gb, cb, cm, cy, hc, cc, tc, igl)    	
+
 		# route = [Location, Location, ..., Location]
 		# where trip[0]    = origin
 		#       trip[-1]   = destination
 		#       trip[1:-1] = gas stations
     	route = calculate_trip(password = args.password,
-    						  origin = "1000 Vin Scully Ave, Los Angeles, CA 90012",
-    						  destination = "4 Yawkey Way, Boston, MA 02215",
+    						  origin = origin,
+    						  destination = destination,
     						  tank_capacity = 300)
+    	
     	for location in route:
     		print(location.address)
-		
-    	return render_template('result.html', result=result, form=form,
-    		origin=t.origin, destination=t.dest, distance=t.distance, duration=t.duration, 
-    		route=stops)
+    		
+    	return render_template('result.html', result=result, form=form, origin=t.origin, destination=t.dest, distance=t.distance, duration=t.duration, route=route[:-1])
     return render_template("index.html", title='Trip Form', form=form)
 
 
@@ -64,4 +65,4 @@ def contact():
     return render_template("contactus.html")
     
 if __name__ == '__main__':
-    app.run()
+    app.run(host="0.0.0.0",port=80)

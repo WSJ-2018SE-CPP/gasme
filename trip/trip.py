@@ -1,12 +1,14 @@
 from trip.user import User
 from trip.location import Location
 from trip.p2p_route import P2p_route
-from trip.geo import getDistanceDuration, getRoute
+from trip.geo import getDistanceDuration, getRoute, getInfo
 
 class Trip:
 	def __init__(self, origin, dest, stops, gb, cb, cm, cy, hc, cc, tc, igl):
-		self.origin = Location(origin)
-		self.dest = Location(dest)
+		o = getInfo(origin)
+		self.origin = Location(o["name"], o["long"], o["lat"], o["address"])
+		d = getInfo(dest)
+		self.dest = Location(d["name"], d["long"], d["lat"], d["address"])
 		self.stops = stops
 		self.user = User(gb, cb, cm, cy, hc, cc, tc, igl)
 		
@@ -23,13 +25,13 @@ class Trip:
 		
 		#Example on how to get stop points using Address/LongLat with GoogleMap Direction API
 		stop_points2 = self.getStopPointsAddress(self.origin.address, self.dest.address)
-		stop_points3 = self.getStopPointsLogLat(self.origin.log, self.origin.lat, self.dest.log, self.dest.lat)
+		stop_points3 = self.getStopPointsLogLat(self.origin.lon, self.origin.lat, self.dest.lon, self.dest.lat)
 
 		#Example on how to get distance/duration using Address/LongLat/Location with GoogleMap Distance Matrix API			
-		disdur1 = self.calRouteLogLat(self.origin.log, self.origin.lat, self.dest.log, self.dest.lat)
+		disdur1 = self.calRouteLogLat(self.origin.lon, self.origin.lat, self.dest.lon, self.dest.lat)
 		disdur2 = self.calRouteAddress(self.origin.address, self.dest.address)
 		disdur3 = self.calRouteLocation(self.origin, self.dest)
-		disdur4 = self.calRouteLogLat(self.route[0].start_log, self.route[0].start_lat, self.dest.log, self.dest.lat)
+		disdur4 = self.calRouteLogLat(self.route[0].start_log, self.route[0].start_lat, self.dest.lon, self.dest.lat)
 
 		self.distance = disdur4["distance"]
 		self.duration = disdur4["duration"]
