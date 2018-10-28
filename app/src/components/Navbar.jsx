@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-//import './Navbar.css';
 import brandLogo from "../img/gasMe.png";
 import './Navbar.css';
 
@@ -27,6 +26,10 @@ class Navbar extends Component {
                     </li>
                     <li className="nav-item">
                         <a className="nav-link" href="/Contact">Contact</a>
+                    </li>
+
+                    <li className="nav-item">
+                        <a className="nav-link" href="/TripCost1">TEST</a>
                     </li>
                 
                     </ul>
