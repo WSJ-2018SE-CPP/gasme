@@ -1,7 +1,8 @@
 # run.py
 import json
+from flask import jsonify
 from trip.forms import TripForm
-from trip.trip import Trip
+from trip.location import Location
 from trip.trip_calculator.trip_calculator import calculate_trip
 from trip.geo import getInfo
 from flask import Flask, render_template, flash, redirect, request
@@ -38,7 +39,28 @@ def index():
     	cc = request.form.get('cityMPG')
     	tc = request.form.get('tankCapacity')
     	igl = request.form.get('currentTankLevel')
-    	t = Trip(origin, destination, "", gb, cb, cm, cy, hc, cc, tc, igl)    	
+    	
+    	
+    	# Check if Origin/Destination is in the US or exist
+    	# Change with status on JSON later on
+    	try:
+    		o = getInfo(origin)
+    		d = getInfo(destination)
+    	except:
+    		error = Location("NOT_FOUND","NOT_FOUND","NOT_FOUND","NOT_FOUND") 		
+    		return render_template('result.html', result=result, form=form, origin=error, destination=error, route=[])
+
+    	top = 49.3457868 # north lat
+    	left = -124.7844079 # west long
+    	right = -66.9513812 # east long
+    	bottom =  24.7433195 # south lat
+    		
+    	originbound = o["lat"] < top and o["lat"] > bottom and o["long"] < right and o["long"] > left
+    	destinationbound = d["lat"] < top and d["lat"] > bottom and d["long"] < right and d["long"] > left
+    	if not (originbound and destinationbound):
+    		error = Location("NOT_FOUND","NOT_FOUND","NOT_FOUND","NOT_FOUND")    		
+    		return render_template('result.html', result=result, form=form, origin=error, destination=error, route=[])
+
 
 		# route = [Location, Location, ..., Location]
 		# where trip[0]    = origin
@@ -51,8 +73,22 @@ def index():
     	
     	for location in route:
     		print(location.address)
-    		
-    	return render_template('result.html', result=result, form=form, origin=t.origin, destination=t.dest, distance=t.distance, duration=t.duration, route=route[:-1])
+    	
+    	# create JSON response
+    	stoppoints = [dict() for x in range(len(route))]
+    	for x in range(0, len(route)):
+    		stoppoints[x]["long"] = route[x].lon
+    		stoppoints[x]["lat"] = route[x].lat
+    		stoppoints[x]["is_gas_station"] = 1
+
+    	result = {"status": 0,
+    		"trip1": stoppoints,
+    		"cost": [1,2],
+    		"time": [0.5,1]		
+    		}
+    	
+    	#return(jsonify(result))
+    	return render_template('result.html', result=result, form=form, origin=route[0], destination=route[-1], route=route[:-1])
     return render_template("index.html", title='Trip Form', form=form)
 
 

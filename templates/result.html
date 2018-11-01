@@ -105,30 +105,30 @@
 				<th> Longitude </th>
 				<th> Latitude </th>
             <tr>
-               <th> STARTING POINT: </th>
+               <th> STARTING POINT: </th> 
                <td> {{ origin.place_id }} </td>
                <td> {{ origin.address }} </td>
                <td> {{ origin.name }} </td>
-               <td> {{ origin.log }} </td>
+               <td> {{ origin.lon }} </td>
                <td> {{ origin.lat }} </td>
 
             </tr>
             <tr>
-               <th> DESTINATION: </th>
+               <th> DESTINATION: </th> 
                <td> {{ destination.place_id }} </td>
                <td> {{ destination.address }} </td>
                <td> {{ destination.name }} </td>
-               <td> {{ destination.log }} </td>
+               <td> {{ destination.lon }} </td>
                <td> {{ destination.lat }} </td>
             </tr>
             <tr>
     </table>
 </div>
 
-<div>
-	Duration: {{duration}} 
-	Distance: {{distance}}
-	Route: {{route}}
+<div><!--
+	Duration: duration
+	Distance: distance
+	Route: route-->
 </div>
 
 <div id="map"></div>
