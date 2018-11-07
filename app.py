@@ -4,7 +4,7 @@ from flask import jsonify
 from trip.forms import TripForm
 from trip.location import Location
 from trip.trip_calculator.trip_calculator import calculate_trip
-from trip.geo import getInfo
+from trip.geo import getInfo, getDistanceDuration
 from flask import Flask, render_template, flash, redirect, request
 from config import Config
 import argparse
@@ -57,20 +57,52 @@ def createRoute(origin, destination):
 
     return route
 
-def createResponse(route):	
-    # create JSON response
-    stoppoints = [dict() for x in range(len(route))]
-    for x in range(0, len(route)):
-    	stoppoints[x]["long"] = route[x].lon
-    	stoppoints[x]["lat"] = route[x].lat
-    	stoppoints[x]["is_gas_station"] = 1
+def combineRoutes(trip):
+	route = []
+	is_gas_station = []
+	for i in range(1,len(trip)):
+		nextRoute = createRoute(trip[i-1]["address"],trip[i]["address"])
+		is_gas_station = is_gas_station + [0]
+		is_gas_station = is_gas_station + [1] * (len(nextRoute) - 2)
+		if ( i < len(trip) - 1):
+			route = route + nextRoute[:-1 or None]
+			
+		else:
+			route = route + nextRoute
+			is_gas_station = is_gas_station + [0]
 
-    result = {"status": 0,
-    	"trip1": stoppoints,
-    	"cost": [1,2],
-    	"time": [0.5,1]		
-    }
-    return result
+	for i in range(0,len(route)):
+		print (route[i].address)	
+
+	return route, is_gas_station	
+
+def createResponse(route, is_gas_station):	
+	# create JSON response
+	stoppoints = [dict() for x in range(len(route))]
+	time = [{} for x in range(len(route)-1)]
+	mileage = [{} for x in range(len(route)-1)]
+
+	for x in range(0, len(route)):
+		stoppoints[x]["long"] = route[x].lon
+		stoppoints[x]["lat"] = route[x].lat
+		stoppoints[x]["is_gas_station"] = is_gas_station[x]
+
+	for x in range(1, len(route)):
+		origin = str(route[x-1].lat) + "," + str(route[x-1].lon)
+		dest = str(route[x].lat)  + "," + str(route[x].lon)
+		#print(x)
+		#print(origin)
+		#print(dest)
+		disdur = getDistanceDuration(origin, dest)
+		time[x-1] = disdur["duration"]
+		mileage[x-1] =  disdur["distance"]
+
+	result = {"status": 0,
+		"trip1": stoppoints,
+		"mileage": mileage,
+		"time": time	
+	}
+	return result
 
 def createErrorResponse(status_code):
 	result = {"status": status_code}
@@ -124,8 +156,8 @@ def index():
 			tc = request.form.get('tankCapacity')
 			igl = request.form.get('currentTankLevel')
 
-			#jdata = get_json_file('/Users/wilsenkosasih/desktop/se2/gasme/user_input.json')
-			#car, gas, trip = decode_json(jdata)
+			jdata = get_json_file(os.path.join(os.path.dirname(__file__), 'user_input.json'))
+			car, gas, trip = decode_json(jdata)
 
 			check = checkLocation(origin, destination)
 			if check == -1:
@@ -134,10 +166,19 @@ def index():
 				#error = Location("NOT_FOUND","NOT_FOUND","NOT_FOUND","NOT_FOUND")
 				#return render_template('result.html', result=result, form=form, origin=error, destination=error, route=[])
 			
-			route = createRoute(origin,destination)
-			result = createResponse(route)
+			#From form
+			#route = createRoute(origin,destination)
+			#From json file
+			#route = createRoute(trip[0]["address"],trip[1]["address"])
+
+			route, is_gas_station = combineRoutes(trip)	
+			#print (is_gas_station)
+			result = createResponse(route, is_gas_station)
+			print (result)		
 			#return(jsonify(result))
 			return render_template('result.html', result=result, form=form, origin=route[0], destination=route[-1], route=route[:-1])
+		else:				
+		    return render_template("index.html", title='Trip Form', form=form)
 	else:				
 	    return render_template("index.html", title='Trip Form', form=form)
 

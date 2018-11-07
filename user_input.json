@@ -1,0 +1,19 @@
+{
+    "car":{
+      "car_brand": "Toyota",
+      "car_model": "Camry",
+      "car_year": "2010",
+      "highway_consumption":  "33",
+      "city_consumption": "22",
+      "tank_capacity":"18.5",
+      "initial_gas_level": "100.0",
+      "default":"0"
+    },
+    "gas":{
+      "brand":"Shell"
+    },
+    "trip": [ {"address": "Anaheim, CA, USA"},
+      {"address": "New York, NY, USA"},
+      {"address": "San Francisco, CA, USA"}
+    ]
+}
