@@ -47,5 +47,17 @@ class Location:
 					lon = location["long"],
 					lat = location["lat"],
 					address = location["address"])
+
+
+class GasStation(Location):
+	"""
+	A Gas Station object is a Location with a gas price
+	"""
 	
+	def __init__(self, name, lon, lat, address, gasPrice):
+		Location.__init__(self, name, lon, lat, address)
+		self.gasPrice = gasPrice
+	
+	def getGasPrice():
+		return self.gasPrice
 		

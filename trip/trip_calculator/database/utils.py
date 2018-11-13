@@ -1,5 +1,5 @@
-from trip.location import Location
-from trip.trip_calculator.cardinal_bounds import CardinalBounds
+from trip.location import GasStation
+from trip.trip_calculator.grid.cardinal_bounds import CardinalBounds
 import pymysql
 
 # database information
@@ -41,11 +41,12 @@ def getAllGasStationsAndBounds(password: str):
 		   		E = max(E, gas_station[3])
 		   		W = min(W, gas_station[3])
 		   		gas_stations.append(
-		    		Location(
+		    		GasStation(
 		    			address=gas_station[0],
 		    			name=gas_station[1],
 		    			lat=gas_station[2],
-		    			lon=gas_station[3]
+		    			lon=gas_station[3],
+		    			gasPrice=float(gas_station[4])
 		    		)
 		    	)
 	finally:

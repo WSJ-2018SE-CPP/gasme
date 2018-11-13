@@ -1,5 +1,6 @@
 from context import trip
 from trip.trip_calculator.trip_calculator import calculate_trip
+from trip.location import GasStation
 import argparse
 
 # argument parser for password
@@ -16,4 +17,5 @@ if __name__ == '__main__':
 	destination = "4 Yawkey Way, Boston, MA 02215"
 	route = calculate_trip(args.password, origin, destination)
 	for location in route:
-		print(location.address)
+		print(("%s --> $%.2f" % (location.address, location.gasPrice)
+				if isinstance(location, GasStation) else location.address))

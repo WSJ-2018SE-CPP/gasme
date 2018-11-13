@@ -5,7 +5,7 @@ Trip Cost Calculator.
 from trip.location import Location
 from trip.geo import getInfo
 from trip.trip_calculator.node import TripCalculatorNode
-from trip.trip_calculator.grid import Grid
+from trip.trip_calculator.grid.grid import Grid
 from trip.trip_calculator.heuristics import ShortestStops
 from trip.trip_calculator.database.utils import *
 from geopy.distance import vincenty
@@ -72,8 +72,8 @@ def calculate_trip(password: str, origin: str, destination: str, tank_capacity=3
 		explored.append(node.state)
 		
 		# for each neighboring station, add to frontier if state not already explored
-		for distanceTraveled, distanceDestination, newState in grid.get_neighbors(node.state):
+		for newState in grid.get_neighbors(node.state):
 			if newState not in explored:
-				heappush(frontier, TripCalculatorNode(state=newState,parent=node))
+				heappush(frontier, TripCalculatorNode(state=newState, parent=node))
 		
 

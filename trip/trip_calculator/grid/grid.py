@@ -138,9 +138,7 @@ class Grid:
 										(gas_station.lat, gas_station.lon)).miles
 			if distanceTraveled > self.tank_capacity:
 				continue
-			distanceDestination = vincenty((gas_station.lat, gas_station.lon),
-											(self.destination.lat, self.destination.lon)).miles
-			gas_stations.append((distanceTraveled, distanceDestination, gas_station))
+			gas_stations.append(gas_station)
 		
 		return gas_stations
 

@@ -6,6 +6,8 @@ class TripCalculatorNode:
 	A Node class for A* Search.
 	"""
 	
+	# TripCalculatorHeuristic subclass implementing the calculateHeuristic
+	# function for cost calculation.
 	costCalculator = None
 	
 	def __init__(self, state, parent):
