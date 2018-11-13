@@ -1,11 +1,14 @@
 from trip.location import Location
+from trip.trip_calculator.heuristics import ShortestStops
 
-class Node:
+class TripCalculatorNode:
 	"""
 	A Node class for A* Search.
 	"""
 	
-	def __init__(self, state, parent, cost):
+	costCalculator = None
+	
+	def __init__(self, state, parent):
 		"""
 		Initializes the Node.
 		
@@ -17,7 +20,7 @@ class Node:
 		
 		self.state = state
 		self.parent = parent
-		self.cost = cost
+		self.cost = TripCalculatorNode.costCalculator.calculateHeuristic(state, parent)
 		self.depth = 0 if parent is None else parent.depth + 1
 	
 	

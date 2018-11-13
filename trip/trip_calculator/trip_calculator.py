@@ -4,18 +4,13 @@ Trip Cost Calculator.
 
 from trip.location import Location
 from trip.geo import getInfo
-from trip.trip_calculator.node import Node
+from trip.trip_calculator.node import TripCalculatorNode
 from trip.trip_calculator.grid import Grid
+from trip.trip_calculator.heuristics import ShortestStops
+from trip.trip_calculator.database.utils import *
 from geopy.distance import vincenty
-import pymysql
 from math import ceil
 from heapq import heappush, heappop
-
-# database information
-host="gasme-db.cusrpulgblsj.us-west-1.rds.amazonaws.com"
-port=3306
-dbname='gasme'
-user='gasme'
 
 def calculate_trip(password: str, origin: str, destination: str, tank_capacity=300):
 	"""
@@ -35,53 +30,24 @@ def calculate_trip(password: str, origin: str, destination: str, tank_capacity=3
 	origin = Location.fromAddress(origin)
 	destination = Location.fromAddress(destination)
 	
-	# lat and lon bounds
-	N = -90
-	S = 90
-	E = -180
-	W = 180
-	
-	# list of all gas stations as Location
-	gas_stations = []
-	
-	# get, parse and add each gas station
-	conn = pymysql.connect(host, user=user, port=port, passwd=password, db=dbname)
-	try:
-		with conn.cursor() as cursor:
-		    sql = 'SELECT * from gas_prices'
-		    cursor.execute(sql)
-		    all_gas_stations = cursor.fetchall()
-		    for gas_station in all_gas_stations:
-		   		N = max(N, gas_station[2])
-		   		S = min(S, gas_station[2])
-		   		E = max(E, gas_station[3])
-		   		W = min(W, gas_station[3])
-		   		gas_stations.append(
-		    		Location(
-		    			address=gas_station[0],
-		    			name=gas_station[1],
-		    			lat=gas_station[2],
-		    			lon=gas_station[3]
-		    		)
-		    	)
-	finally:
-		conn.close()
+	# get all gas stations and boundary coordinates
+	gas_stations, cardinalBounds = getAllGasStationsAndBounds(password=password)
 	
 	# validate gas stations
 	if len(gas_stations) == 0:
 		print("Could not get any gas stations from the database")
 		return None
 	
-	# square grid based on tank capacity
-	grid = Grid(destination, tank_capacity, N, S, E, W)
+	# square grid based on tank capacity for efficient neighbor search
+	grid = Grid(destination, tank_capacity, cardinalBounds)
 	grid.set_grid(gas_stations)
+	
+	# define the heuristic to be used during the search
+	TripCalculatorNode.costCalculator = ShortestStops(destination)
 	
 	# frontier and explored states for A* search
 	frontier = []
-	heappush(frontier, Node(state=origin,
-							parent=None,
-							cost=vincenty((origin.lat, origin.lon),
-									(destination.lat, destination.lon)).miles))
+	heappush(frontier, TripCalculatorNode(state=origin, parent=None))
 	explored = []
 	
 	# search
@@ -108,9 +74,6 @@ def calculate_trip(password: str, origin: str, destination: str, tank_capacity=3
 		# for each neighboring station, add to frontier if state not already explored
 		for distanceTraveled, distanceDestination, newState in grid.get_neighbors(node.state):
 			if newState not in explored:
-				heappush(frontier, Node(
-								state=newState,
-								parent=node,
-								cost=distanceDestination))
+				heappush(frontier, TripCalculatorNode(state=newState,parent=node))
 		
 

@@ -11,7 +11,7 @@ class Grid:
 	 neighboring blocks, so we can eliminite much of the successor space.
 	"""
 	
-	def __init__(self, destination, tank_capacity, N, S, E, W):
+	def __init__(self, destination, tank_capacity, cardinalBounds):
 		"""
 		Creates a Grid structure.
 
@@ -27,10 +27,10 @@ class Grid:
 		# instance variables
 		self.destination = destination
 		self.tank_capacity = tank_capacity
-		self.N = N
-		self.S = S
-		self.E = E
-		self.W = W
+		self.N = cardinalBounds.N
+		self.S = cardinalBounds.S
+		self.E = cardinalBounds.E
+		self.W = cardinalBounds.W
 		 
 		# boundary points
 		top_left     = (self.N, self.W)
