@@ -6,7 +6,7 @@ from trip.location import Location
 from trip.geo import getInfo
 from trip.trip_calculator.node import TripCalculatorNode
 from trip.trip_calculator.grid.grid import Grid
-from trip.trip_calculator.heuristics import ShortestStops
+from trip.trip_calculator.heuristics import ShortestStops, CheapestTrip
 from trip.trip_calculator.database.utils import *
 from geopy.distance import vincenty
 from math import ceil
@@ -43,7 +43,7 @@ def calculate_trip(password: str, origin: str, destination: str, tank_capacity=3
 	grid.set_grid(gas_stations)
 	
 	# define the heuristic to be used during the search
-	TripCalculatorNode.costCalculator = ShortestStops(destination)
+	TripCalculatorNode.costCalculator = CheapestTrip(destination)
 	
 	# frontier and explored states for A* search
 	frontier = []

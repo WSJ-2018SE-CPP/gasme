@@ -22,7 +22,9 @@ class TripCalculatorNode:
 		
 		self.state = state
 		self.parent = parent
-		self.cost = TripCalculatorNode.costCalculator.calculateHeuristic(state, parent)
+		self.cost = TripCalculatorNode.costCalculator.calculateHeuristic(
+				state,
+				None if parent is None else parent.state)
 		self.depth = 0 if parent is None else parent.depth + 1
 	
 	
