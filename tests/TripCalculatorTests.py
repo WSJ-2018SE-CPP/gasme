@@ -1,5 +1,5 @@
 from context import trip
-from trip.trip_calculator.trip_calculator import calculate_trip, getCostOfTrip, getRemainingTankLevel
+from trip.trip_calculator.trip_calculator import calculateTrip, getCostOfTrip, getRemainingTankLevel
 from trip.location import GasStation
 import argparse
 
@@ -19,7 +19,7 @@ if __name__ == '__main__':
 	#destination = "Oracle, Oakland 02215"
 	mpg = 30
 	tankCapacity = 12
-	route = calculate_trip(args.password, origin, destination, mpg * tankCapacity)
+	route = calculateTrip(args.password, origin, destination, mpg, tankCapacity, tankCapacity-10)
 	for location in route:
 		print(("%s --> $%.2f" % (location.address, location.gasPrice)
 				if isinstance(location, GasStation) else location.address))

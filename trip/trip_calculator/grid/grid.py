@@ -66,12 +66,13 @@ class Grid:
 			self.grid[row][col].append(gas_station)
 	
 	
-	def get_neighbors(self, gas_station):
+	def get_neighbors(self, gas_station, currentTankLevelInMiles):
 		"""
 		Gets all neighboring gas stations.
 		
 		Args:
 		  gas_station: the gas station to get neighbors of.
+		  currentTankLevelInMiles: the number of miles we can travel on our current tank level
 		
 		Return:
 		  A list of (distanceTraveled, distanceDestination, Location)
@@ -90,28 +91,28 @@ class Grid:
 		col = int(getDistanceInMilesFromCoordinates((lat, lon), (lat, self.W))/self.tank_capacity)
 		
 		# add gas stations in neighboring blocks
-		gas_stations.extend(self._get_all(gas_station, row, col))
+		gas_stations.extend(self._get_all(gas_station, row, col, currentTankLevelInMiles))
 		if row > 0:
-			gas_stations.extend(self._get_all(gas_station, row-1, col))
+			gas_stations.extend(self._get_all(gas_station, row-1, col, currentTankLevelInMiles))
 		if row < self.grid_rows-1:
-			gas_stations.extend(self._get_all(gas_station, row+1, col))
+			gas_stations.extend(self._get_all(gas_station, row+1, col, currentTankLevelInMiles))
 		if col > 0:
-			gas_stations.extend(self._get_all(gas_station, row, col-1))
+			gas_stations.extend(self._get_all(gas_station, row, col-1, currentTankLevelInMiles))
 		if col < self.grid_cols-1:
-			gas_stations.extend(self._get_all(gas_station, row, col+1))
+			gas_stations.extend(self._get_all(gas_station, row, col+1, currentTankLevelInMiles))
 		if row > 0 and col > 0:
-			gas_stations.extend(self._get_all(gas_station, row-1, col-1))
+			gas_stations.extend(self._get_all(gas_station, row-1, col-1, currentTankLevelInMiles))
 		if row > 0 and col < self.grid_cols-1:
-			gas_stations.extend(self._get_all(gas_station, row-1, col+1))
+			gas_stations.extend(self._get_all(gas_station, row-1, col+1, currentTankLevelInMiles))
 		if row < self.grid_rows-1 and col > 0:
-			gas_stations.extend(self._get_all(gas_station, row+1, col-1))
+			gas_stations.extend(self._get_all(gas_station, row+1, col-1, currentTankLevelInMiles))
 		if row < self.grid_rows-1 and col < self.grid_cols-1:
-			gas_stations.extend(self._get_all(gas_station, row+1, col+1))
+			gas_stations.extend(self._get_all(gas_station, row+1, col+1, currentTankLevelInMiles))
 		
 		return gas_stations
 	
 	
-	def _get_all(self, origin, row, col):
+	def _get_all(self, origin, row, col, currentTankLevelInMiles):
 		"""
 		Get all gas stations and distances from an origin gas station within a block.
 		
@@ -119,6 +120,7 @@ class Grid:
 		  origin: the origin gas station
 		  row: the row of the block
 		  col: the col of the block
+		  currentTankLevelInMiles: the number of miles we can travel on our current tank level
 		
 		Return:
 		  A list of (distanceTraveled, distanceDestination, Location) for each
@@ -136,7 +138,7 @@ class Grid:
 		for gas_station in self.grid[row][col]:
 			distanceTraveled = getDistanceInMilesFromCoordinates((origin_lat, origin_lon),
 										(gas_station.lat, gas_station.lon))
-			if distanceTraveled > self.tank_capacity:
+			if distanceTraveled > currentTankLevelInMiles:
 				continue
 			gas_stations.append(gas_station)
 		

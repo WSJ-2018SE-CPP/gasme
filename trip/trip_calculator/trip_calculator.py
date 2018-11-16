@@ -12,7 +12,7 @@ from trip.trip_calculator.distance.distance_utils import *
 from math import ceil
 from heapq import heappush, heappop
 
-def calculate_trip(password: str, origin: str, destination: str, tank_capacity=300):
+def calculateTrip(password: str, origin: str, destination: str, mpg=30, tankCapacity=12, initialTankLevel=12):
 	"""
 	Calculates the gas stations stops for the trip.
 	
@@ -20,7 +20,9 @@ def calculate_trip(password: str, origin: str, destination: str, tank_capacity=3
 	  password: the password to the database.
 	  origin: the address string of the origin.
 	  destination: the address string of the destination.
-	  tank_capacity: the tank capacity for the car, in miles
+	  mpg: the miles per gallon of the car
+	  tankCapacity: the tank capacity, in gallons, of the car
+	  initialTankLevel: the initial tank level, in gallons, of the car
 	
 	Returns:
 	  A list of locations including origin, stops and destination for the trip.
@@ -38,8 +40,11 @@ def calculate_trip(password: str, origin: str, destination: str, tank_capacity=3
 		print("Could not get any gas stations from the database")
 		return None
 	
+	# tank capacity as miles in a full tank
+	tankCapacityMiles = mpg * tankCapacity
+	
 	# square grid based on tank capacity for efficient neighbor search
-	grid = Grid(destination, tank_capacity, cardinalBounds)
+	grid = Grid(destination, tankCapacityMiles, cardinalBounds)
 	grid.set_grid(gas_stations)
 	
 	# define the heuristic to be used during the search
@@ -49,6 +54,10 @@ def calculate_trip(password: str, origin: str, destination: str, tank_capacity=3
 	frontier = []
 	heappush(frontier, TripCalculatorNode(state=origin, parent=None))
 	explored = []
+	
+	# current tank level, initially it is the initial tank level
+	# but we assume a full fill up at each stop
+	currentTankLevelInMiles = mpg * initialTankLevel
 	
 	# search
 	while True:
@@ -62,7 +71,7 @@ def calculate_trip(password: str, origin: str, destination: str, tank_capacity=3
 		
 		# return if destination within range
 		distanceDestination = getDistanceInMiles(node.state, destination)
-		if distanceDestination <= tank_capacity:
+		if distanceDestination <= currentTankLevelInMiles:
 			route = node.get_route()
 			route.append(destination)
 			return route
@@ -71,9 +80,12 @@ def calculate_trip(password: str, origin: str, destination: str, tank_capacity=3
 		explored.append(node.state)
 		
 		# for each neighboring station, add to frontier if state not already explored
-		for newState in grid.get_neighbors(node.state):
+		for newState in grid.get_neighbors(node.state, currentTankLevelInMiles):
 			if newState not in explored:
 				heappush(frontier, TripCalculatorNode(state=newState, parent=node))
+		
+		# update the tank level, assume a full fillup
+		currentTankLevelInMiles = mpg * tankCapacity
 
 
 def getCostOfTrip(trip, mpg, tankCapacity, initialTankLevel):
