@@ -1,5 +1,5 @@
-from geopy.distance import vincenty
 from math import ceil
+from trip.trip_calculator.distance.distance_utils import *
 
 class Grid:
 	"""
@@ -39,8 +39,8 @@ class Grid:
 		bottom_right = (self.S, self.E)
 		
 		# width and height of boundary
-		width = max(vincenty(top_left, top_right).miles, vincenty(bottom_left, bottom_right).miles)
-		height = max(vincenty(top_left, bottom_left).miles, vincenty(top_right, bottom_right).miles)
+		width = max(getDistanceInMilesFromCoordinates(top_left, top_right), getDistanceInMilesFromCoordinates(bottom_left, bottom_right))
+		height = max(getDistanceInMilesFromCoordinates(top_left, bottom_left), getDistanceInMilesFromCoordinates(top_right, bottom_right))
 		
 		# number of rows and columns
 		self.grid_rows = ceil(height/tank_capacity)
@@ -61,8 +61,8 @@ class Grid:
 		for gas_station in gas_stations:
 			lat = gas_station.lat
 			lon = gas_station.lon
-			row = int(vincenty((lat, lon), (self.N, lon)).miles/self.tank_capacity)
-			col = int(vincenty((lat, lon), (lat, self.W)).miles/self.tank_capacity)
+			row = int(getDistanceInMilesFromCoordinates((lat, lon), (self.N, lon))/self.tank_capacity)
+			col = int(getDistanceInMilesFromCoordinates((lat, lon), (lat, self.W))/self.tank_capacity)
 			self.grid[row][col].append(gas_station)
 	
 	
@@ -86,8 +86,8 @@ class Grid:
 		gas_stations = []
 		
 		# get the row and column of the gas station
-		row = int(vincenty((lat, lon), (self.N, lon)).miles/self.tank_capacity)
-		col = int(vincenty((lat, lon), (lat, self.W)).miles/self.tank_capacity)
+		row = int(getDistanceInMilesFromCoordinates((lat, lon), (self.N, lon))/self.tank_capacity)
+		col = int(getDistanceInMilesFromCoordinates((lat, lon), (lat, self.W))/self.tank_capacity)
 		
 		# add gas stations in neighboring blocks
 		gas_stations.extend(self._get_all(gas_station, row, col))
@@ -134,8 +134,8 @@ class Grid:
 		
 		# for each station within the block, add it along with the distance to the list
 		for gas_station in self.grid[row][col]:
-			distanceTraveled = vincenty((origin_lat, origin_lon),
-										(gas_station.lat, gas_station.lon)).miles
+			distanceTraveled = getDistanceInMilesFromCoordinates((origin_lat, origin_lon),
+										(gas_station.lat, gas_station.lon))
 			if distanceTraveled > self.tank_capacity:
 				continue
 			gas_stations.append(gas_station)

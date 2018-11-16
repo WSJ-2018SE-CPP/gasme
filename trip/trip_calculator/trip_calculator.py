@@ -8,7 +8,7 @@ from trip.trip_calculator.node import TripCalculatorNode
 from trip.trip_calculator.grid.grid import Grid
 from trip.trip_calculator.heuristics import ShortestStops, CheapestTrip
 from trip.trip_calculator.database.utils import *
-from geopy.distance import vincenty
+from trip.trip_calculator.distance.distance_utils import *
 from math import ceil
 from heapq import heappush, heappop
 
@@ -61,8 +61,7 @@ def calculate_trip(password: str, origin: str, destination: str, tank_capacity=3
 		node = heappop(frontier)
 		
 		# return if destination within range
-		distanceDestination = vincenty((node.state.lat, node.state.lon),
-									(destination.lat, destination.lon)).miles
+		distanceDestination = getDistanceInMiles(node.state, destination)
 		if distanceDestination <= tank_capacity:
 			route = node.get_route()
 			route.append(destination)
@@ -75,5 +74,42 @@ def calculate_trip(password: str, origin: str, destination: str, tank_capacity=3
 		for newState in grid.get_neighbors(node.state):
 			if newState not in explored:
 				heappush(frontier, TripCalculatorNode(state=newState, parent=node))
-		
+
+
+def getCostOfTrip(trip, mpg, tankCapacity, initialTankLevel):
+	"""
+	Gets the total cost of a trip.
+	
+	Args:
+	  trip: a list of Locations, where trip[0] is the origin, trip[-1] is 
+	        the destination and trip[1:-1] are GasStations
+	  mpg: the miles per gallon of the car
+	  tankCapacity: the tank capacity, in gallons, of the car
+	  initialTankLevel: the initial tank level, in gallons, of the car
+	"""
+	
+	tripCost = 0
+	currentTankLevel = initialTankLevel
+	for i in range(1, len(trip) - 1):
+		currentTankLevel -= getDistanceInMiles(trip[i-1], trip[i]) / mpg
+		tripCost += (tankCapacity - currentTankLevel) * trip[i].gasPrice
+		currentTankLevel = tankCapacity
+	return tripCost
+
+
+def getRemainingTankLevel(trip, mpg, tankCapacity, initialTankLevel):
+	"""
+	Gets the tank level at the end of the trip.
+	
+	Args:
+	  trip: a list of Locations, where trip[0] is the origin, trip[-1] is 
+	        the destination and trip[1:-1] are GasStations
+	  mpg: the miles per gallon of the car
+	  tankCapacity: the tank capacity, in gallons, of the car
+	  initialTankLevel: the initial tank level, in gallons, of the car
+	"""
+	
+	tankLevelAtSecondToLastStop = (initialTankLevel if len(trip) == 2 else tankCapacity)
+	gallonsToLastStop = getDistanceInMiles(trip[-2], trip[-1]) / mpg
+	return tankLevelAtSecondToLastStop - gallonsToLastStop
 

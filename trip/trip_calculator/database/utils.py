@@ -36,6 +36,8 @@ def getAllGasStationsAndBounds(password: str):
 		    cursor.execute(sql)
 		    all_gas_stations = cursor.fetchall()
 		    for gas_station in all_gas_stations:
+		   		if "Canada" in gas_station[0]:
+		   			continue
 		   		N = max(N, gas_station[2])
 		   		S = min(S, gas_station[2])
 		   		E = max(E, gas_station[3])
