@@ -1,15 +1,13 @@
 .float {
-  font-family: sans-serif;
-  background: yellowgreen;
+  position: absolute;
+  top: 120px;
+  left: 0%;
+  z-index: 5;
+  /* background-color: #fff; */
   padding: 5px;
-  width: 310px;
-  z-index: 100;
-  position: fixed;
-}
-.float a,
-.float h3 {
-  font-size: 0.9em;
-  display: block;
-  margin: 0 0.5em;
-  color: white;
+  /* border: 1px solid #999; */
+  /* text-align: center; */
+  font-family: 'Roboto','sans-serif';
+  line-height: 30px;
+  padding-left: 10px;
 }

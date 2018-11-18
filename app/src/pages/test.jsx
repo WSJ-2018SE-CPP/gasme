@@ -14,13 +14,11 @@ class test extends Component {
     return (
       <div>
         <Navbar />
-		<Footer />
-		<div style={divStyle}>
-          <IconLabelTabs />
-        </div>
-		{/* <TestFloat/> */}
-        {/* <GoogleMapDirection/> */}
-        
+        <Footer />
+        {/* <div style={divStyle}> */}
+        <IconLabelTabs />
+        {/* </div> */}
+        <GoogleMapDirection />
       </div>
     );
   }

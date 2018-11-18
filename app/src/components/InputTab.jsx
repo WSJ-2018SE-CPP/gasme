@@ -18,7 +18,7 @@ const styles = {
   root: {
     flexGrow: 1,
     maxWidth: 310,
-    height: "100vh",
+    height: "80vh",
     backgroundColor: "#eef8fd",
 
     // position: 'absolute',

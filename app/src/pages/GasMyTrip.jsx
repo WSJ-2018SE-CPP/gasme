@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import Navbar from "../components/Navbar";
-import IconLabelTabs from "../components/InputTab";
 import Footer from "../components/Footer";
+import IconLabelTabs from "../components/InputTab";
+import GoogleMapDirection from "../components/GoogleMapDirection";
 
 class GasMyTrip extends Component {
   state = {};
@@ -12,11 +13,12 @@ class GasMyTrip extends Component {
     return (
       <div>
         <Navbar />
-        <div style={divStyle}>
-          <IconLabelTabs />
-        </div>
-
         <Footer />
+        <GoogleMapDirection/>
+        {/* <div style={divStyle}>
+          <IconLabelTabs />
+        </div> */}
+
       </div>
     );
   }
