@@ -1,0 +1,16 @@
+.float {
+    font-family: sans-serif;
+    background: yellowgreen;
+    padding: 5px;
+    width: 310px;
+    z-index: 100;
+    position: fixed;
+  }
+  .float a,
+  .float h3 {
+    font-size: 0.9em;
+    display: block;
+    margin: 0 0.5em;
+    color: white;
+  }
+  

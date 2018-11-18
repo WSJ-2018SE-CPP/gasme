@@ -38,7 +38,7 @@ class Navbar extends Component {
 							</a>
 						</li>
 						<li className="nav-item">
-							<a className="nav-link" href="/TripCost">
+							<a className="nav-link" href="/GasMyTrip">
 								Gas My Trip
 							</a>
 						</li>
@@ -59,7 +59,7 @@ class Navbar extends Component {
 						</li>
 						<li>
 							<OverlayTrigger placement="right" overlay={tooltip}>
-								<a href="/TripCost" alt=" new trip">
+								<a href="/GasMyTrip" alt=" new trip">
 									<img src={new_trip_btn} />
 								</a>
 							</OverlayTrigger>

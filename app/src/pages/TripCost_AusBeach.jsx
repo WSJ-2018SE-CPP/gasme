@@ -1,29 +1,32 @@
 import React, { Component } from "react";
-import "./GoogleMapDirection.css";
-// import Footer from "../Footer";
-// import Navbar from "../Navbar";
+import axios from "axios";
+import "./TripCost.css";
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
 // import destIcon from '../img/destS.png';
 import gasIconPurple from "../img/gasPurple.png";
 import gasIconGreen from "../img/gasStationGreen.png";
-// import IconLabelTabs from "../components/InputTab";
-// import * as data from "../components/backUps/data.json";
-import * as data from "../components/backUps/la_lv.json";
+import InputTab from "../components/InputTab";
 
-class GoogleMapDirection extends Component {
+class googleMapDirection extends Component {
   constructor() {
     super();
 
     this.state = {
       pyResp: [],
       trip: [
-        //this is testing data for json to backend
         { route: 1, cost: 345.2, dist: 300, time: 5.1 },
         { route: 2, cost: 306.2, dist: 320, time: 6.2 }
       ],
-      places: data.trip1,
-      gas_price: data.gas_price,
-      //   center: { lat: -33.9, lng: 151.2 }
-      center: { lat: 34.052235, lng: -118.243683 } //LA
+      beaches: [
+        ["Coogee Beach", -33.923036, 151.259052, 5, 0, 1.9],
+        ["Bondi Beach", -33.890542, 151.274856, 4, 0, 0],
+        ["Maroubra Beach", -33.950198, 151.259302, 1, 1, 2.9],
+        ["Cronulla Beach", -34.028249, 151.157507, 3, 1, 2.5],
+        ["Manly Beach", -33.80010128657071, 151.28747820854187, 2, 0, 0]
+      ],
+      center: { lat: -33.9, lng: 151.2 }
+      //center: { lat: 34.052235, lng: -118.243683 }, //LA
     };
   }
 
@@ -46,6 +49,31 @@ class GoogleMapDirection extends Component {
     })
       .then(res => res.json())
       .then(res => console.log(res));
+  }
+
+  //in testing with flask, not working
+  postItems_notworking() {
+    console.log("posting to python");
+    axios({
+      method: "post",
+      url: "http://localhost:5000",
+      data: this.state.trip,
+
+      // {
+      // title: 'Fred',
+      // 'lastName': 'Flintstone'
+      // },
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      }
+    })
+      .then(function(response) {
+        console.log(response);
+      })
+      .catch(function(error) {
+        console.log(error);
+        console.log(error.response.data);
+      });
   }
 
   getItems() {
@@ -83,7 +111,7 @@ class GoogleMapDirection extends Component {
     });
 
     // Create An InfoWindow
-    // var infowindow = new window.google.maps.InfoWindow();
+    var infowindow = new window.google.maps.InfoWindow();
 
     var directionsService = new window.google.maps.DirectionsService();
     var directionsDisplay = new window.google.maps.DirectionsRenderer({
@@ -91,13 +119,13 @@ class GoogleMapDirection extends Component {
     });
     directionsDisplay.setMap(map);
 
-    // var origin = "1419 Westwood Blvd, Los Angeles, CA 90024-4911"; //'{{origin.address}}',
-    // var destination = "3799 S Las Vegas Blvd, Las Vegas, NV 89109";
-    // var start = new window.google.maps.LatLng(
-    //   "37.7683909618184",
-    //   "-122.51089453697205"
-    // );
-    // var end = new window.google.maps.LatLng("41.850033", "-87.6500523");
+    var origin = "1419 Westwood Blvd, Los Angeles, CA 90024-4911"; //'{{origin.address}}',
+    var destination = "3799 S Las Vegas Blvd, Las Vegas, NV 89109";
+    var start = new window.google.maps.LatLng(
+      "37.7683909618184",
+      "-122.51089453697205"
+    );
+    var end = new window.google.maps.LatLng("41.850033", "-87.6500523");
     //this.calculateAndDisplayRoute(directionsService, directionsDisplay, start, end);
     //this.calculateAndDisplayRoute(directionsService, directionsDisplay, origin, destination);
     this.calculateAndDisplayRouteWayPoints(
@@ -108,16 +136,34 @@ class GoogleMapDirection extends Component {
 
     this.setMarkers(map);
   };
+  //using waypoints: https://developers.google.com/maps/documentation/javascript/examples/directions-waypoints
+  // calculateAndDisplayRoute = (directionsService, directionsDisplay, origin, destination) => {
+  // 	directionsService.route(
+  // 		{
+  // 			origin: origin,
+  // 			destination: destination,
+  // 			//waypoints: waypts,
+  // 			optimizeWaypoints: true,
+  // 			travelMode: 'DRIVING'
+  // 		},
+  // 		function(response, status) {
+  // 			if (status === 'OK') {
+  // 				directionsDisplay.setDirections(response);
+  // 			} else {
+  // 				window.alert('Directions request failed due to ' + status);
+  // 			}
+  // 		}
+  // 	);
+  // };
 
   calculateAndDisplayRouteWayPoints(map, directionsService, directionsDisplay) {
     var waypts = [];
     var origin;
     var destination;
-    for (var i = 0; i < this.state.places.length; i++) {
-      var item = this.state.places[i];
-      console.log(item);
-      var location = new window.google.maps.LatLng(item.lat, item.long);
-      if (i !== 0 && i !== this.state.places.length - 1) {
+    for (var i = 0; i < this.state.beaches.length; i++) {
+      var item = this.state.beaches[i];
+      var location = new window.google.maps.LatLng(item[1], item[2]);
+      if (i !== 0 && i !== this.state.beaches.length - 1) {
         waypts.push({
           location: location,
           stopover: true
@@ -129,12 +175,14 @@ class GoogleMapDirection extends Component {
       }
     }
 
+    //var origin = '1419 Westwood Blvd, Los Angeles, CA 90024-4911'; //'{{origin.address}}',
+    //var destination = '3799 S Las Vegas Blvd, Las Vegas, NV 89109';
     directionsService.route(
       {
         origin: origin,
         destination: destination,
         waypoints: waypts,
-        optimizeWaypoints: false,
+        optimizeWaypoints: true,
         travelMode: "DRIVING"
       },
       function(response, status) {
@@ -174,28 +222,26 @@ class GoogleMapDirection extends Component {
       coords: [1, 1, 1, 20, 18, 20, 18, 1],
       type: "poly"
     };
-
-    for (var i = 0; i < this.state.places.length; i++) {
-      var place = this.state.places[i];
+    for (var i = 0; i < this.state.beaches.length; i++) {
+      var beach = this.state.beaches[i];
       //var whatIcon = beach[4] === 0 ? destIcon : gasIconGreen;
-      var gasPrice = this.state.gas_price[i];
-      const lat = this.state.places[i].lat;
-      const long = this.state.places[i].long;
-      if (this.state.places[i].is_gas_station === 0) {
+      var gasPrice = beach[5];
+
+      if (beach[4] === 0) {
         var marker = new window.google.maps.Marker({
-          position: { lat: lat, lng: long },
+          position: { lat: beach[1], lng: beach[2] },
           map: map,
           label: {
             text: (i + 1).toString(),
             color: "white",
             fontWeight: "bold",
             fontSize: "16px"
-          }
-          //title: beach[0]
+          },
+          title: beach[0]
         });
       } else {
         var marker = new window.google.maps.Marker({
-          position: { lat: lat, lng: long },
+          position: { lat: beach[1], lng: beach[2] },
           map: map,
           icon: icon,
           label: {
@@ -203,39 +249,52 @@ class GoogleMapDirection extends Component {
             color: "red",
             fontWeight: "bold",
             fontSize: "16px"
-          }
-          //title: beach[0]
+          },
+          title: beach[0]
         });
       }
     }
   };
 
   render() {
-    var divStyle_tab = {
-      paddingTop: "50px"
+    var divStyle = {
+      paddingTop: "265px"
     };
-
     return (
       <div>
         {/* <Navbar /> */}
-
         <button onClick={() => this.getItems()}>getFromPython</button>
         <button onClick={() => this.postItems()}>check terminal</button>
         <p>{this.state.pyResp.orig}</p>
         <p>{this.state.pyResp.dest}</p>
-        <p>fdaljf</p>
-        {/* <div style={divStyle_tab}>
-          <IconLabelTabs />
-        </div> */}
         <div id="map">{this.renderMap()}</div>
-
-        {/* <Footer /> */}
+		{/* <InputTab/> */}
+        <Footer />
       </div>
     );
   }
 }
 
-export default GoogleMapDirection;
+function directionServiceGoogleMap(directionsService, directionsDisplay) {
+  var start = "37.7683909618184, -122.51089453697205";
+  var end = "41.850033, -87.6500523";
+  var request = {
+    origin: start,
+    destination: end,
+    travelMode: window.google.maps.DirectionsTravelMode.DRIVING
+  };
+  directionsService.route(request, function(response, status) {
+    if (status == window.google.maps.DirectionsStatus.OK) {
+      directionsDisplay.setDirections(response);
+      var myRoute = response.routes[0];
+      var txtDir = "";
+      for (var i = 0; i < myRoute.legs[0].steps.length; i++) {
+        txtDir += myRoute.legs[0].steps[i].instructions + "<br />";
+      }
+      document.getElementById("directions").innerHTML = txtDir;
+    }
+  });
+}
 
 function loadScript(url) {
   var index = window.document.getElementsByTagName("script")[0];
@@ -245,27 +304,6 @@ function loadScript(url) {
   script.defer = true;
   index.parentNode.insertBefore(script, index);
 }
-
-// function directionServiceGoogleMap(directionsService, directionsDisplay) {
-//   var start = "37.7683909618184, -122.51089453697205";
-//   var end = "41.850033, -87.6500523";
-//   var request = {
-//     origin: start,
-//     destination: end,
-//     travelMode: window.google.maps.DirectionsTravelMode.DRIVING
-//   };
-//   directionsService.route(request, function(response, status) {
-//     if (status == window.google.maps.DirectionsStatus.OK) {
-//       directionsDisplay.setDirections(response);
-//       var myRoute = response.routes[0];
-//       var txtDir = "";
-//       for (var i = 0; i < myRoute.legs[0].steps.length; i++) {
-//         txtDir += myRoute.legs[0].steps[i].instructions + "<br />";
-//       }
-//       document.getElementById("directions").innerHTML = txtDir;
-//     }
-//   });
-// }
 
 // function setMarker(map, position, title, gasprice) {
 // 	var icon = {
@@ -296,3 +334,4 @@ function loadScript(url) {
 // 	});
 // }
 
+export default googleMapDirection;

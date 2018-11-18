@@ -35,14 +35,14 @@ def decode_json(json_data):
     return 0
 
 
-@app.route('/', methods = ['POST'])
-def from_jsonfile():
-    jdata = get_json_file(os.path.join(os.path.dirname(__file__), 'user_input.json'))
-    car, gas, trip = decode_json(jdata)
-    print("car: " + str(car))
-    print("gas " + str(gas))
-    print("trip " + str(trip))
-    return jsonify("fetch from a json file, check python terminal")
+#@app.route('/', methods = ['POST'])
+#def from_jsonfile():
+#    jdata = get_json_file(os.path.join(os.path.dirname(__file__), 'user_input.json'))
+#    car, gas, trip = decode_json(jdata)
+#    print("car: " + str(car))
+#    print("gas " + str(gas))
+#    print("trip " + str(trip))
+#    return jsonify("fetch from a json file, check python terminal")
 
 
 @app.route('/', methods = ['GET'])

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import "./GoogleMapDirection.css";
-// import Footer from "../Footer";
-// import Navbar from "../Navbar";
+import "./TripCost.css";
+import Footer from "../components/Footer";
+import Navbar from "../components/Navbar";
 // import destIcon from '../img/destS.png';
 import gasIconPurple from "../img/gasPurple.png";
 import gasIconGreen from "../img/gasStationGreen.png";
@@ -9,7 +9,7 @@ import gasIconGreen from "../img/gasStationGreen.png";
 // import * as data from "../components/backUps/data.json";
 import * as data from "../components/backUps/la_lv.json";
 
-class GoogleMapDirection extends Component {
+class googleMapDirection extends Component {
   constructor() {
     super();
 
@@ -235,7 +235,7 @@ class GoogleMapDirection extends Component {
   }
 }
 
-export default GoogleMapDirection;
+export default googleMapDirection;
 
 function loadScript(url) {
   var index = window.document.getElementsByTagName("script")[0];

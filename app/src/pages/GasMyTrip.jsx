@@ -2,10 +2,8 @@ import React, { Component } from "react";
 import Navbar from "../components/Navbar";
 import IconLabelTabs from "../components/InputTab";
 import Footer from "../components/Footer";
-import GoogleMapDirection from "../components/GoogleMapDirection";
-import TestFloat from "../components/TestFloat";
 
-class test extends Component {
+class GasMyTrip extends Component {
   state = {};
   render() {
     var divStyle = {
@@ -14,16 +12,14 @@ class test extends Component {
     return (
       <div>
         <Navbar />
-		<Footer />
-		<div style={divStyle}>
+        <div style={divStyle}>
           <IconLabelTabs />
         </div>
-		{/* <TestFloat/> */}
-        {/* <GoogleMapDirection/> */}
-        
+
+        <Footer />
       </div>
     );
   }
 }
 
-export default test;
+export default GasMyTrip;

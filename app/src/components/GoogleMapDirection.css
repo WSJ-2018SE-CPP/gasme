@@ -1,25 +1,24 @@
-.TripCost1 {
+.TripCost {
 	text-align: center;
 }
 
-.TripCost1-logo {
+.TripCost-logo {
 	animation: App-logo-spin infinite 20s linear;
 	height: 80px;
 }
 
-.TripCost1-header {
+.TripCost-header {
 	background-color: #222;
 	height: 150px;
 	padding: 20px;
 	color: white;
-	text: "11111"
 }
 
-.TripCost1-title {
+.TripCost-title {
 	font-size: 1.5em;
 }
 
-.TripCost1-intro {
+.TripCost-intro {
 	font-size: large;
 }
 
@@ -33,12 +32,16 @@
 }
 
 #map {
+	padding-top: 165px;
 	height: 100vh;
 }
-html,
-body {
-	height: 100%;
+html, body {
+	/* height: 100%;
 	margin: 0;
-	padding: 0;
+	padding: 0; */
+	position: absolute;
+	top: 0; left: 0; right: 0; bottom: 0;
+	background: #000;
+	z-index: 0;
 }
 
