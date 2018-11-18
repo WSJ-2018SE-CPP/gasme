@@ -3,7 +3,7 @@ import json, os, flask
 from flask import jsonify
 from trip.forms import TripForm
 from trip.location import Location
-from trip.trip_calculator.trip_calculator import calculate_trip
+from trip.trip_calculator.trip_calculator import calculateTrip, getRemainingTankLevel, getCostOfTrip
 from trip.geo import getInfo, getDistanceDuration
 from flask import Flask, render_template, flash, redirect, request
 from config import Config
@@ -44,27 +44,43 @@ def checkLocation(origin, destination):
 		
     return 0
 
-def createRoute(origin, destination):
+def createRoute(origin, destination, mpg, tankCapacity, initialTankLevel):
 	# route = [Location, Location, ..., Location]
 	# where trip[0]    = origin
 	#       trip[-1]   = destination
 	#       trip[1:-1] = gas stations
-    route = calculate_trip(password = args.password,
+    route = calculateTrip(password = args.password,
     					  origin = origin,
     					  destination = destination,
-    					  tank_capacity = 300)
+    					  mpg = int(mpg),
+						  tankCapacity = int(tankCapacity),
+						  initialTankLevel = initialTankLevel
+						)
     	
     for location in route:
     	print(location.address)
 
     return route
 
-def combineRoutes(trip):
+def combineRoutes(trip, car):
 	route = []
 	is_gas_station = []
+	gas_level = float(car["initial_gas_level"])*float(car["tank_capacity"])/100
+
 	#gas_price = []
 	for i in range(1,len(trip)):
-		nextRoute = createRoute(trip[i-1]["address"],trip[i]["address"])
+
+		nextRoute = createRoute(trip[i-1]["address"],
+								trip[i]["address"],
+								car["highway_consumption"],
+								car["tank_capacity"],
+						        gas_level
+								)
+		gas_level = getRemainingTankLevel(nextRoute, 
+										float(car["highway_consumption"]), 
+										float(car["tank_capacity"]), 
+										gas_level)
+
 		is_gas_station = is_gas_station + [0]
 		is_gas_station = is_gas_station + [1] * (len(nextRoute) - 2)
 		if ( i < len(trip) - 1):
@@ -78,12 +94,14 @@ def combineRoutes(trip):
 
 	return route, is_gas_station	
 
-def createResponse(route, is_gas_station):	
+def createResponse(route, is_gas_station, car):	
 	# create JSON response
 	stoppoints = [dict() for x in range(len(route))]
 	time = [{} for x in range(len(route)-1)]
 	mileage = [{} for x in range(len(route)-1)]
 	gas_price = [{} for x in range(len(route))]
+	cost = [{} for x in range(len(route)-1)]
+	gallons_to_fuel = [{} for x in range(len(route)-1)]
 
 	for x in range(0, len(route)):
 		stoppoints[x]["long"] = route[x].lon
@@ -102,7 +120,31 @@ def createResponse(route, is_gas_station):
 			mileage[x-1] =  disdur["distance"]
 	except:
 		return {"status": 2}
-	
+			
+	gas_level = float(car["initial_gas_level"])*float(car["tank_capacity"])/100
+	for x in range(1, len(route)-1):
+		if is_gas_station[x]:
+			remaining = getRemainingTankLevel(route[x-1:x+1], 
+											float(car["highway_consumption"]), 
+											float(car["tank_capacity"]), 
+											gas_level)
+			gallons_to_fuel[x-1] = float(car["tank_capacity"]) - remaining
+			cost[x-1] = getCostOfTrip(route[x-1:x+2], 
+								float(car["highway_consumption"]), 
+								float(car["tank_capacity"]),
+								gas_level)
+			gas_level = float(car["tank_capacity"])
+		else:
+			cost[x-1] = 0.0
+			gallons_to_fuel[x-1] = 0.0
+			gas_level = getRemainingTankLevel(route[x-1:x+1], 
+										float(car["highway_consumption"]), 
+										float(car["tank_capacity"]), 
+										gas_level)
+			
+	cost[len(route)-2] = 0.0
+	gallons_to_fuel[len(route)-2] = 0.0
+
 	status = 0
 	if len(route) > 23:
 		status = 3
@@ -111,7 +153,9 @@ def createResponse(route, is_gas_station):
 		"trip1": stoppoints,
 		"gas_price": gas_price,	
 		"mileage": mileage,
-		"time": time
+		"time": time,
+		"cost": cost,
+		"gallons_to_fuel": gallons_to_fuel
 	}
 	return result
 
@@ -156,15 +200,15 @@ def decode_json_from_post(json_data):
         car["car_year"] = json_data["selectedYear"]
         car["highway_consumption"] = json_data["selectedHwy"]
         car["city_consumption"] = json_data["selectedLocal"]
-        #car["tank_capacity"] = json_data["car"]["tank_capacity"]
-        #car["initial_gas_level"] = json_data["car"]["initial_gas_level"]
+        car["tank_capacity"] = json_data["selectedTankCapacity"]
+        car["initial_gas_level"] = json_data["selectedGasLevel"]
         #gas
         gas = dict()
         gas["brand"] = json_data["selectedGas"]
         #trip
         trip = []
-        #for one in json_data["trip"]:
-        #    trip.append({"address": one["address"], "address": one["address"]})
+        for one in json_data["locaitons"]:
+            trip.append({"address": one, "address": one})
         return car, gas, trip
 
     return 0
@@ -173,53 +217,16 @@ def decode_json_from_post(json_data):
 @app.route('/', methods = ['GET', 'POST'])
 @cross_origin(supports_credentials=True)
 def index():
-	form = TripForm()
-	#if flask.request.method == 'POST':
-		#if form.validate_on_submit():
-		#	result = request.form
-		#	form = TripForm()
-			
-		#	origin = request.form.get('origin')
-		#	destination = request.form.get('destination')
-		#	gb = request.form.get('brand')
-		#	cb = request.form.get('carBrand')
-		#	cm = request.form.get('carModel')
-		#	cy = request.form.get('carYear')
-		#	hc = request.form.get('highwayMPG')
-		#	cc = request.form.get('cityMPG')
-		#	tc = request.form.get('tankCapacity')
-		#	igl = request.form.get('currentTankLevel')
 	jdata = request.get_json()
 	print (jdata)
 
-	data = decode_json_from_post(jdata)
-	print(data)
-	return (jsonify(jdata))
-	#jdata = get_json_file(os.path.join(os.path.dirname(__file__), 'user_input.json'))
-	car, gas, trip = decode_json(jdata)
-
-			#check = checkLocation(origin, destination)
-			#if check == -1:
-			#	result = createErrorResponse(1)
-			#	return (jsonify(result))
-				#error = Location("NOT_FOUND","NOT_FOUND","NOT_FOUND","NOT_FOUND")
-				#return render_template('result.html', result=result, form=form, origin=error, destination=error, route=[])
-			
-			#From form
-			#route = createRoute(origin,destination)
-			#From json file
-			#route = createRoute(trip[0]["address"],trip[1]["address"])
-
-	route, is_gas_station = combineRoutes(trip)	
-	result = createResponse(route, is_gas_station)
+	car, gas, trip = decode_json_from_post(jdata)
+	route, is_gas_station = combineRoutes(trip, car)	
+	result = createResponse(route, is_gas_station, car)
 	print (result)	
 	return(jsonify(result))
-	return render_template('result.html', result=result, form=form, origin=route[0], destination=route[-1], route=route[:-1])
-		#else:				
-		#   return render_template("index.html", title='Trip Form', form=form)
-	#else:				
-	#    return render_template("index.html", title='Trip Form', form=form)
 
+	
 
 @app.route('/about')
 def about():
