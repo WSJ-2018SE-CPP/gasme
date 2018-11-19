@@ -54,10 +54,13 @@ class GasStation(Location):
 	A Gas Station object is a Location with a gas price
 	"""
 	
-	def __init__(self, name, lon, lat, address, gasPrice):
+	def __init__(self, name, lon, lat, address, gasPrice, brand):
 		Location.__init__(self, name, lon, lat, address)
 		self.gasPrice = gasPrice
+		self.brand = brand
 	
 	def getGasPrice():
 		return self.gasPrice
-		
+	
+	def getBrand():
+		return self.brand

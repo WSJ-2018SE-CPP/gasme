@@ -48,7 +48,8 @@ def getAllGasStationsAndBounds(password: str):
 		    			name=gas_station[1],
 		    			lat=gas_station[2],
 		    			lon=gas_station[3],
-		    			gasPrice=float(gas_station[4])
+		    			gasPrice=float(gas_station[4]),
+		    			brand=gas_station[1]
 		    		)
 		    	)
 	finally:

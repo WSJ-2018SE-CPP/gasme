@@ -13,15 +13,19 @@ parser.add_argument('-p',
 args = parser.parse_args()
 
 if __name__ == '__main__':
-	origin = "1000 Vin Scully Ave, Los Angeles, CA 90012"
-	destination = "4 Yawkey Way, Boston, MA 02215"
+	#origin = "1000 Vin Scully Ave, Los Angeles, CA 90012"
+	#destination = "4 Yawkey Way, Boston, MA 02215"
 	#origin = "AT&T Park, San Francisco"
 	#destination = "Oracle, Oakland 02215"
+	#origin = "Anaheim, CA, USA"
+	#destination = "New York, NY, USA"
+	origin = "New York, NY, USA"
+	destination = "San Francisco, CA, USA"
 	mpg = 30
 	tankCapacity = 12
 	route = calculateTrip(args.password, origin, destination, mpg, tankCapacity, tankCapacity-10)
 	for location in route:
-		print(("%s --> $%.2f" % (location.address, location.gasPrice)
+		print(("%s --> $%.2f, %s" % (location.address, location.gasPrice, location.brand)
 				if isinstance(location, GasStation) else location.address))
 	print(getCostOfTrip(route, mpg, tankCapacity, tankCapacity))
 	print(getRemainingTankLevel(route, mpg, tankCapacity, tankCapacity))
