@@ -102,14 +102,17 @@ def createResponse(route, is_gas_station, car):
 	gas_price = [{} for x in range(len(route))]
 	cost = [{} for x in range(len(route)-1)]
 	gallons_to_fuel = [{} for x in range(len(route)-1)]
+	station_brand = [{} for x in range(len(route))]
 
 	for x in range(0, len(route)):
 		stoppoints[x]["long"] = route[x].lon
 		stoppoints[x]["lat"] = route[x].lat
 		stoppoints[x]["is_gas_station"] = is_gas_station[x]
 		if is_gas_station[x] == 1:
+			station_brand[x] = route[x].brand
 			gas_price[x] = route[x].gasPrice
 		else:
+			station_brand[x] = "None"
 			gas_price[x] = 0.0
 	try:
 		for x in range(1, len(route)):
@@ -152,10 +155,11 @@ def createResponse(route, is_gas_station, car):
 	result = {"status": status,
 		"trip1": stoppoints,
 		"gas_price": gas_price,	
-		"mileage": mileage,
-		"time": time,
-		"cost": cost,
-		"gallons_to_fuel": gallons_to_fuel
+		"mileage": ["0 mi"] + mileage,
+		"time": ["0 hour 0 min"] + time,
+		"cost": [0.0] + cost,
+		"gallons_to_fuel": [0.0] + gallons_to_fuel,
+		"station_brand": station_brand
 	}
 	return result
 
