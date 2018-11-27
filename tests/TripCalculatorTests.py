@@ -24,7 +24,7 @@ if __name__ == '__main__':
 	#destination = "3421 Loreto Drive, San Ramon, CA"
 	mpg = 30
 	tankCapacity = 12
-	filters = [GasStationBrandFilter("Shell")]
+	filters = [GasStationBrandMultipleFilter(["Shell", "76", "ARCO"])]
 	route = calculateTrip(args.password, origin, destination, mpg, tankCapacity, 5, filters)
 	for location in route:
 		print(("%s --> $%.2f, %s" % (location.address, location.gasPrice, location.brand)
