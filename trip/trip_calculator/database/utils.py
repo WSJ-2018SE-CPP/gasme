@@ -8,12 +8,13 @@ port=3306
 dbname='gasme'
 user='gasme'
 
-def getAllGasStationsAndBounds(password: str):
+def getAllGasStationsAndBounds(password: str, filters=[]):
 	"""
 	Gets all gas stations and cardinal bounds, max/min lat and max/min lon, from the database.
 
 	Args:
 	  password: the database password
+	  filters: a list of filters to for potential gas stations
 
 	Returns:
 	  [Location], CardinalBounds for all gas stations in the database
@@ -38,6 +39,8 @@ def getAllGasStationsAndBounds(password: str):
 		    for gas_station in all_gas_stations:
 		   		if "Canada" in gas_station[0]:
 		   			continue
+		   		if not all([f.filter(gas_station) for f in filters]):
+		   			continue
 		   		N = max(N, gas_station[2])
 		   		S = min(S, gas_station[2])
 		   		E = max(E, gas_station[3])
@@ -54,5 +57,5 @@ def getAllGasStationsAndBounds(password: str):
 		    	)
 	finally:
 		conn.close()
-    
+	
 	return gas_stations, CardinalBounds(N=N, S=S, E=E, W=W)

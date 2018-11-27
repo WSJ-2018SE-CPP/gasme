@@ -12,7 +12,7 @@ from trip.trip_calculator.distance.distance_utils import *
 from math import ceil
 from heapq import heappush, heappop
 
-def calculateTrip(password: str, origin: str, destination: str, mpg=30, tankCapacity=12, initialTankLevel=12):
+def calculateTrip(password: str, origin: str, destination: str, mpg=30, tankCapacity=12, initialTankLevel=12, filters=[]):
 	"""
 	Calculates the gas stations stops for the trip.
 	
@@ -23,6 +23,7 @@ def calculateTrip(password: str, origin: str, destination: str, mpg=30, tankCapa
 	  mpg: the miles per gallon of the car
 	  tankCapacity: the tank capacity, in gallons, of the car
 	  initialTankLevel: the initial tank level, in gallons, of the car
+	  filters: a list of filters to for potential gas stations
 	
 	Returns:
 	  A list of locations including origin, stops and destination for the trip.
@@ -33,7 +34,7 @@ def calculateTrip(password: str, origin: str, destination: str, mpg=30, tankCapa
 	destination = Location.fromAddress(destination)
 	
 	# get all gas stations and boundary coordinates
-	gas_stations, cardinalBounds = getAllGasStationsAndBounds(password=password)
+	gas_stations, cardinalBounds = getAllGasStationsAndBounds(password=password, filters=filters)
 	
 	# validate gas stations
 	if len(gas_stations) == 0:
