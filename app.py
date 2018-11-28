@@ -4,6 +4,7 @@ from flask import jsonify
 from trip.forms import TripForm
 from trip.location import Location
 from trip.trip_calculator.trip_calculator import calculateTrip, getRemainingTankLevel, getCostOfTrip
+from trip.trip_calculator.database.filters import GasStationBrandMultipleFilter, GasStationBrandFilter
 from trip.geo import getInfo, getDistanceDuration
 from flask import Flask, render_template, flash, redirect, request
 from config import Config
@@ -23,46 +24,52 @@ app = Flask(__name__)
 app.config.from_object(Config)
 CORS(app, support_credentials=True)
 
-def checkLocation(origin, destination):
+def checkLocation(locations):
 	# Check if Origin/Destination is in the US or exist
-    # Change with status on JSON later on
-    try:
-    	o = getInfo(origin)
-    	d = getInfo(destination)
-    except:
-    	return -1
-    
-    top = 49.3457868 # north lat
-    left = -124.7844079 # west long
-    right = -66.9513812 # east long
-    bottom =  24.7433195 # south lat
-    		
-    originbound = o["lat"] < top and o["lat"] > bottom and o["long"] < right and o["long"] > left
-    destinationbound = d["lat"] < top and d["lat"] > bottom and d["long"] < right and d["long"] > left
-    if not (originbound and destinationbound):
-    	return -1
-		
-    return 0
+	# Change with status on JSON later on
+	top = 49.3457868 # north lat
+	left = -124.7844079 # west long
+	right = -66.9513812 # east long
+	bottom =  24.7433195 # south lat
 
-def createRoute(origin, destination, mpg, tankCapacity, initialTankLevel):
+	try:
+		for i in range(0,len(locations)):
+			l = getInfo(locations[i]["address"])
+			usabound = l["lat"] < top and l["lat"] > bottom and l["long"] < right and l["long"] > left
+			if not (usabound):
+				return -1
+	except:
+		return -1
+		
+	return 0
+
+def createRoute(origin, destination, mpg, tankCapacity, initialTankLevel, gas):
 	# route = [Location, Location, ..., Location]
 	# where trip[0]    = origin
 	#       trip[-1]   = destination
 	#       trip[1:-1] = gas stations
-    route = calculateTrip(password = args.password,
-    					  origin = origin,
-    					  destination = destination,
-    					  mpg = int(mpg),
-						  tankCapacity = int(tankCapacity),
-						  initialTankLevel = initialTankLevel
+	filters = []
+	if (gas["brand"] == "Top"):
+	    filters = [GasStationBrandMultipleFilter(["Shell", "76", "ARCO"])]
+	elif (gas["brand"] == "Shell"):
+		filters = [GasStationBrandFilter("Shell")]
+	else:
+		filters = []	
+	route = calculateTrip(password = args.password,
+							origin = origin,
+							destination = destination,
+							mpg = int(mpg),
+							tankCapacity = int(tankCapacity),
+							initialTankLevel = initialTankLevel,
+							filters = filters
 						)
     	
-    for location in route:
-    	print(location.address)
+	for location in route:
+		print(location.address)
 
-    return route
+	return route
 
-def combineRoutes(trip, car):
+def combineRoutes(trip, car, gas):
 	route = []
 	is_gas_station = []
 	gas_level = float(car["initial_gas_level"])*float(car["tank_capacity"])/100
@@ -74,7 +81,8 @@ def combineRoutes(trip, car):
 								trip[i]["address"],
 								car["highway_consumption"],
 								car["tank_capacity"],
-						        gas_level
+						        gas_level,
+								gas
 								)
 		gas_level = getRemainingTankLevel(nextRoute, 
 										float(car["highway_consumption"]), 
@@ -107,6 +115,8 @@ def createResponse(route, is_gas_station, car):
 	for x in range(0, len(route)):
 		stoppoints[x]["long"] = route[x].lon
 		stoppoints[x]["lat"] = route[x].lat
+		stoppoints[x]["address"] = route[x].address
+		stoppoints[x]["name"] = route[x].name
 		stoppoints[x]["is_gas_station"] = is_gas_station[x]
 		if is_gas_station[x] == 1:
 			station_brand[x] = route[x].brand
@@ -225,7 +235,15 @@ def index():
 	print (jdata)
 
 	car, gas, trip = decode_json_from_post(jdata)
-	route, is_gas_station = combineRoutes(trip, car)	
+	if not trip or len(trip) < 2:
+		result = {"status": 1}
+		return (jsonify(result))
+
+	if checkLocation(trip) == -1:
+		result = {"status": 2}
+		return (jsonify(result))
+
+	route, is_gas_station = combineRoutes(trip, car, gas)	
 	result = createResponse(route, is_gas_station, car)
 	print (result)	
 	return(jsonify(result))
