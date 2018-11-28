@@ -26,7 +26,6 @@ CORS(app, support_credentials=True)
 
 def checkLocation(locations):
 	# Check if Origin/Destination is in the US or exist
-	# Change with status on JSON later on
 	top = 49.3457868 # north lat
 	left = -124.7844079 # west long
 	right = -66.9513812 # east long
@@ -56,13 +55,12 @@ def createRoute(origin, destination, mpg, tankCapacity, initialTankLevel, gas):
 	else:
 		filters = []	
 	route = calculateTrip(password = args.password,
-							origin = origin,
-							destination = destination,
-							mpg = int(mpg),
-							tankCapacity = int(tankCapacity),
-							initialTankLevel = initialTankLevel,
-							filters = filters
-						)
+				origin = origin,
+				destination = destination,
+				mpg = int(mpg),
+				tankCapacity = int(tankCapacity),
+				initialTankLevel = initialTankLevel,
+				filters = filters)
     	
 	for location in route:
 		print(location.address)
@@ -78,16 +76,15 @@ def combineRoutes(trip, car, gas):
 	for i in range(1,len(trip)):
 
 		nextRoute = createRoute(trip[i-1]["address"],
-								trip[i]["address"],
-								car["highway_consumption"],
-								car["tank_capacity"],
-						        gas_level,
-								gas
-								)
+						trip[i]["address"],
+						car["highway_consumption"],
+						car["tank_capacity"],
+						gas_level,
+						gas)
 		gas_level = getRemainingTankLevel(nextRoute, 
-										float(car["highway_consumption"]), 
-										float(car["tank_capacity"]), 
-										gas_level)
+						float(car["highway_consumption"]), 
+						float(car["tank_capacity"]), 
+						gas_level)
 
 		is_gas_station = is_gas_station + [0]
 		is_gas_station = is_gas_station + [1] * (len(nextRoute) - 2)
@@ -138,22 +135,22 @@ def createResponse(route, is_gas_station, car):
 	for x in range(1, len(route)-1):
 		if is_gas_station[x]:
 			remaining = getRemainingTankLevel(route[x-1:x+1], 
-											float(car["highway_consumption"]), 
-											float(car["tank_capacity"]), 
-											gas_level)
+							float(car["highway_consumption"]), 
+							float(car["tank_capacity"]), 
+							gas_level)
 			gallons_to_fuel[x-1] = float(car["tank_capacity"]) - remaining
 			cost[x-1] = getCostOfTrip(route[x-1:x+2], 
-								float(car["highway_consumption"]), 
-								float(car["tank_capacity"]),
-								gas_level)
+							float(car["highway_consumption"]), 
+							float(car["tank_capacity"]),
+							gas_level)
 			gas_level = float(car["tank_capacity"])
 		else:
 			cost[x-1] = 0.0
 			gallons_to_fuel[x-1] = 0.0
 			gas_level = getRemainingTankLevel(route[x-1:x+1], 
-										float(car["highway_consumption"]), 
-										float(car["tank_capacity"]), 
-										gas_level)
+							float(car["highway_consumption"]), 
+							float(car["tank_capacity"]), 
+							gas_level)
 			
 	cost[len(route)-2] = 0.0
 	gallons_to_fuel[len(route)-2] = 0.0
@@ -228,7 +225,7 @@ def decode_json_from_post(json_data):
     return 0
 
 #Main page, produce form, receive value inserted in form, pass the result.html
-@app.route('/', methods = ['GET', 'POST'])
+@app.route('/', methods = ['POST'])
 @cross_origin(supports_credentials=True)
 def index():
 	jdata = request.get_json()
