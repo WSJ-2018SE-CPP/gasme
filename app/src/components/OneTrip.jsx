@@ -32,6 +32,8 @@ class OneTrip extends React.Component {
   ) {
     var indents = [];
     var cur_stop = 65;
+    //changed to fix gas stop numbers
+    var number_of_stops = 0;
     for (var i = 0; i < gas_price.length; i++) {
       var index = i;
       var thumbnail = gasBrandIcon;
@@ -53,6 +55,13 @@ class OneTrip extends React.Component {
         else if (!trip[i].is_gas_station) {
           thumbnail = homeImg; 
         }
+        number_of_stops += 1;
+      }
+      else {
+        //This one if you want the format to be A,2,3,4,5,B,7,8,9,C
+        //index = i + 1;
+        //This one if you want the format to be A,1,2,3,4,B,5,6,7,C
+        index = i + 1 - number_of_stops;
       }
       indents.push(
         <div className="waypoint-view" key={i}>
