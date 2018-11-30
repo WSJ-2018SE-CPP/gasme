@@ -15,7 +15,7 @@ import "./InputTab.css";
 const styles = {
   root: {
     flexGrow: 1,
-    maxWidth: 380,
+    width: 350,
     height: "80vh",
     backgroundColor: "#eef8fd",
     display: "block"
@@ -66,9 +66,9 @@ class IconLabelTabs extends React.Component {
 
     return (
       <div>
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-md-3">
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-md-1">
               <div className="float" styles={{ position: "absolute" }}>
                 <Paper square className={classes.root}>
                   <Tabs
@@ -99,7 +99,7 @@ class IconLabelTabs extends React.Component {
                 </Paper>
               </div>
             </div>
-            <div class="col-md-9">
+            <div className="col-md-11">
               <GoogleMapDirection listFromParent={response} />
             </div>
           </div>
