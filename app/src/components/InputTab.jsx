@@ -37,11 +37,16 @@ class IconLabelTabs extends React.Component {
   state = {
     value: 0,
     //rechieving response from backend
+
+    //Changed to fix initial state for pathToGo
     response: {
       status: 0,
       gas_price: [0.0],
       mileage: ["0 mi"],
-      trip1: [],
+      trip1: [{
+        name: "Starting Location",
+        address: "None",
+      }],
       time: ["0 min"],
       gallons_to_fuel: [0.0],
       cost: [0.0]

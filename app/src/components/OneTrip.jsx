@@ -48,6 +48,10 @@ class OneTrip extends React.Component {
         } else if (i === gas_price.length - 1) {
           thumbnail = parkImg;
           outgoing_line = null;
+        } 
+        // changed to fix image on stoppoints (NON-gas station)
+        else if (!trip[i].is_gas_station) {
+          thumbnail = homeImg; 
         }
       }
       indents.push(
@@ -58,11 +62,12 @@ class OneTrip extends React.Component {
                 <div className="waypoint-image">
                   <img className="waypoint-icon" src={thumbnail} />
                 </div>
+                {/* Added name and address */}
                 <div className="waypoint-details">
                   <div className="details">
-                    <div className="address">name pending</div>
+                    <div className="address">{trip[i].name}</div>
                   </div>
-                  <p className="photo-name">address pending</p>
+                  <p className="photo-name">{trip[i].address}</p>
                 </div>
                 <div className="waypoint-index locked">
                   <div className="index" role="button">
