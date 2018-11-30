@@ -90,7 +90,7 @@ class Inputbar extends React.Component {
     const base = 24;
     return Array.from(new Array(10), (v, i) => (
       <option key={i} value={base + i * 4}>
-        {base + i * 4}
+        {base + i * 4 + " MPG"}
       </option>
     ));
   };
@@ -99,7 +99,7 @@ class Inputbar extends React.Component {
     const base = 100;
     return Array.from(new Array(10), (v, i) => (
       <option key={i} value={base - i * 10}>
-        {base - i * 10}
+        {base - i * 10 + " %"}
       </option>
     ));
   };
@@ -108,7 +108,7 @@ class Inputbar extends React.Component {
     const base = 15;
     return Array.from(new Array(11), (v, i) => (
       <option key={i} value={base + i * 1}>
-        {base + i * 1}
+        {base + i * 1 + " Gals"}
       </option>
     ));
   };
