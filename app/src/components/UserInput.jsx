@@ -12,32 +12,15 @@ class Inputbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedCarBrand: "",
-      selectedMake: "",
-      selectedGas: "",
-      selectedYear: "2019",
-      selectedLocal: "15",
+      // selectedLocal: "15",
       selectedHwy: "15",
       selectedGas: "Top",
       selectedGasLevel: "100",
       selectedTankCapacity: "20",
-      which_make: [],
       locaitonsComponent: [],
       locaitons: [],
-      cars: [
-        { value: "Toyota", label: "Toyota" },
-        { value: "Honda", label: "Honda" }
-      ],
-      Toyota: [
-        { value: "Camry", label: "Camry" },
-        { value: "Crown", label: "Crown" }
-      ],
-      Honda: [
-        { value: "Civic Tourer", label: "Civic Tourer" },
-        { value: "FR-V", label: "FR-V" }
-      ],
       gas: [
-        { value: "Top", label: "Top 3" },
+        { value: "Top", label: "Shell, Arco, 76" },
         { value: "Shell", label: "Shell" },
         { value: "Any", label: "Any" }
       ]
@@ -68,35 +51,13 @@ class Inputbar extends React.Component {
     // }
   };
 
-  bindCarMade = (selectedOption, event) => {
-    this.setState({ selectedCarBrand: selectedOption.value });
-    console.log(`Selected: ${selectedOption.label}`);
-    if (selectedOption.label === "Toyota") {
-      this.setState({ which_make: this.state.Toyota });
-      console.log(`Yes Selected: ${"Toyota"}`);
-    } else {
-      this.setState({ which_make: this.state.Honda });
-      console.log(`Yes Selected: ${"Honda"}`);
-    }
-  };
-
   handleChange = event => {
     console.log(`Selected: ${event.target.value}`);
-  };
-
-  updateMade = selectedOption => {
-    this.setState({ selectedMake: selectedOption.value });
-    console.log(`Selected: ${selectedOption.label}`);
   };
 
   updateGas = selectedOption => {
     this.setState({ selectedGas: selectedOption.value });
     console.log(`Selected: ${selectedOption.label}`);
-  };
-
-  updateYear = selectedOption => {
-    this.setState({ selectedYear: selectedOption.target.value });
-    console.log(`Selected: ${selectedOption.target.value}`);
   };
 
   updateHwy = selectedOption => {
@@ -119,31 +80,11 @@ class Inputbar extends React.Component {
     console.log(`Selected: ${selectedOption.target.value}`);
   };
 
-  getDropListYear = () => {
-    var indents = [];
-    const year = new Date().getFullYear() + 1;
-    indents.push();
-    return Array.from(new Array(50), (v, i) => (
-      <option key={i} value={year - i}>
-        {year - i}
-      </option>
-    ));
-  };
-
   getDropListGas = () => {
     const base = 15;
     return Array.from(new Array(16), (v, i) => (
       <option key={i} value={base + i}>
-        {base + i}
-      </option>
-    ));
-  };
-
-  getDropListTank = () => {
-    const base = 100;
-    return Array.from(new Array(10), (v, i) => (
-      <option key={i} value={base - i * 10}>
-        {base - i * 10}
+        {base + i + " MPG"}
       </option>
     ));
   };
@@ -152,7 +93,16 @@ class Inputbar extends React.Component {
     const base = 20;
     return Array.from(new Array(11), (v, i) => (
       <option key={i} value={base + i * 2}>
-        {base + i * 2}
+        {base + i * 2 + " Gals"}
+      </option>
+    ));
+  };
+
+  getDropListTank = () => {
+    const base = 100;
+    return Array.from(new Array(10), (v, i) => (
+      <option key={i} value={base - i * 10}>
+        {base - i * 10 + " %"}
       </option>
     ));
   };
@@ -208,7 +158,6 @@ class Inputbar extends React.Component {
     );
     console.log("in render: locations: " + this.state.locaitons);
 
-    const year = this.getDropListYear();
     return (
       <div className="filter">
         <div className="input-sec">
@@ -219,60 +168,46 @@ class Inputbar extends React.Component {
             <CancelIcon onClick={this.deleteASearchBar} />
           </div>
         </div>
-        <div className="input-sec">
-          <h3 className="heading-first">Car</h3>
-          <Select
-            name="cars"
-            value={this.state.selectedCarBrand}
-            onChange={this.bindCarMade}
-            options={this.state.cars}
-            placeholder="Car Brand"
-          />
-          <Select
-            name="made"
-            value={this.state.selectedMake}
-            onChange={this.updateMade}
-            options={this.state.which_make}
-            placeholder="Car Made"
-          />
-          <select
-            className="select"
-            onChange={this.updateYear}
-            value={this.selectedYear}
-          >
-            {this.getDropListYear()}
-          </select>
-        </div>
 
         <div className="input-sec">
           <h3 className="heading-first">Gas</h3>
-          <p />
-          <label>Local</label>{" "}
-          <select onChange={this.updateLocal} value={this.selectedLocal}>
-            {this.getDropListGas()}
-          </select>{" "}
-          Mile(s)/Gallon
-          <br />
-          <label>Highway</label>{" "}
-          <select onChange={this.updateHwy} value={this.selectedHwy}>
-            {this.getDropListGas()}
-          </select>{" "}
-          Mile(s)/Gallon
-          <br />
-          <label>Tank Capacity</label>{" "}
-          <select
-            onChange={this.updateCapacity}
-            value={this.selectedTankCapacity}
-          >
-            {this.getDropCapacity()}
-          </select>{" "}
-          Gallons
-          <br />
-          <label>Initial Gas Level </label>{" "}
-          <select onChange={this.updateGasLevel} value={this.selectedGasLevel}>
-            {this.getDropListTank()}
-          </select>{" "}
-          %
+          <div key="fuel eco">
+            <label className="line">
+              <div className="line-text">Fuel Economy</div>
+              <select
+                className="select"
+                onChange={this.updateHwy}
+                value={this.selectedHwy}
+              >
+                {this.getDropListGas()}
+              </select>
+            </label>
+          </div>
+          <div key="tank">
+            <label className="line">
+              <div className="line-text">Tank Capacity</div>
+              <select
+                className="select"
+                onChange={this.updateCapacity}
+                value={this.selectedTankCapacity}
+              >
+                {this.getDropCapacity()}
+              </select>
+            </label>
+          </div>
+
+          <div key="gas Init">
+            <label className="line">
+              <div className="line-text">Current Gas Level</div>
+              <select
+                className="select"
+                onChange={this.updateGasLevel}
+                value={this.selectedGasLevel}
+              >
+                {this.getDropListTank()}
+              </select>
+            </label>
+          </div>
         </div>
 
         <div className="input-sec">
@@ -286,13 +221,15 @@ class Inputbar extends React.Component {
             placeholder="Gas Brand"
           />
         </div>
-        <Button
-          bsStyle="primary"
-          bsSize="small"
-          onClick={() => this.postItems()}
-        >
-          SUBMIT
-        </Button>
+        <div className="submit">
+          <Button
+            bsStyle="primary"
+            bsSize="small"
+            onClick={() => this.postItems()}
+          >
+            SUBMIT
+          </Button>
+        </div>
       </div>
     );
   }
