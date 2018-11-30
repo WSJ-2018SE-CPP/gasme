@@ -40,21 +40,29 @@ class Inputbar extends React.Component {
     this.setState({ locaitonsComponent: locations });
   }
 
+  //Modified to make each input bar correspond to each location
   addASearchBar() {
     console.log("add div is clicked");
     var locations = this.state.locaitonsComponent.concat(LocationSearchInput);
     this.setState({ locaitonsComponent: locations });
+
+    const locate = this.state.locaitons;
+    locate.push("");
+    this.setState({ locations: locate });
   }
 
+  //Modified to make each input bar correspond to each location
   deleteASearchBar = () => {
     console.log("delete div is clicked");
-    //console.log("checking: " + this.state.locaitons[0].props.adress);
-    // if (this.state.locaitonsComponent.length > 1) {
-    //   var locations = this.state.locaitonsComponent;
-    //   var lastelement = locaitonsComponent.pop();
-    //   //console.log(lastelement.props);
-    //   this.setState({ locaitonsComponent: locations });
-    // }
+    if (this.state.locaitonsComponent.length > 1) {
+      var locations = this.state.locaitonsComponent;
+      locations.pop();
+      this.setState({ locaitonsComponent: locations });
+
+      const locate = this.state.locaitons;
+      locate.pop();
+      this.setState({ locations: locate });
+    }
   };
 
   handleChange = event => {
@@ -142,16 +150,20 @@ class Inputbar extends React.Component {
       });
   };
 
-  handleAddress(address) {
+  //Modified to make each input bar correspond to each location
+  handleAddress(key, address) {
     console.log("in handleAddress: " + address);
-    const addresses = this.state.locaitons.concat(address);
+    const addresses = Array.from(this.state.locaitons);
+    addresses[key] = address;
+    //const addresses = this.state.locaitons.concat(address);
     this.setState({ locaitons: addresses });
   }
 
   render() {
     const locaitons = this.state.locaitonsComponent.map((Element, index) => {
       return (
-        <Element key={index} index={index} handleAddress={this.handleAddress} />
+        //Modified to make each input bar correspond to each location
+        <Element key={index} index={index} handleAddress={this.handleAddress.bind(this, index)} />
       );
     });
 
