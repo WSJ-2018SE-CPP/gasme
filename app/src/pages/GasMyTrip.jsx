@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import IconLabelTabs from "../components/InputTab";
-import GoogleMapDirection from "../components/GoogleMapDirection";
 
 class GasMyTrip extends Component {
   state = {};
@@ -14,11 +13,7 @@ class GasMyTrip extends Component {
       <div>
         <Navbar />
         <Footer />
-        <GoogleMapDirection/>
-        {/* <div style={divStyle}>
-          <IconLabelTabs />
-        </div> */}
-
+        <IconLabelTabs />
       </div>
     );
   }
