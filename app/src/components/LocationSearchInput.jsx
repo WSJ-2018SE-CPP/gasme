@@ -64,7 +64,7 @@ class LocationSearchInput extends React.Component {
               loading
             }) => (
               <div>
-                <Input
+                <Input style={{width:'100%'}}
                   {...getInputProps({
                     placeholder: "Choose destination",
                     className: "location-search-input"
