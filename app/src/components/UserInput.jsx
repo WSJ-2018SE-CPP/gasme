@@ -13,6 +13,12 @@ class Inputbar extends React.Component {
     super(props);
     this.state = {
       // selectedLocal: "15",
+      isLoading: false,
+      selectedCarBrand: "",
+      selectedMake: "",
+      selectedGas: "",
+      selectedYear: "2019",
+      selectedLocal: "15",
       selectedHwy: "15",
       selectedGas: "Top",
       selectedGasLevel: "100",
@@ -81,19 +87,10 @@ class Inputbar extends React.Component {
   };
 
   getDropListGas = () => {
-    const base = 15;
-    return Array.from(new Array(16), (v, i) => (
-      <option key={i} value={base + i}>
-        {base + i + " MPG"}
-      </option>
-    ));
-  };
-
-  getDropCapacity = () => {
-    const base = 20;
-    return Array.from(new Array(11), (v, i) => (
-      <option key={i} value={base + i * 2}>
-        {base + i * 2 + " Gals"}
+    const base = 24;
+    return Array.from(new Array(10), (v, i) => (
+      <option key={i} value={base + i * 4}>
+        {base + i * 4}
       </option>
     ));
   };
@@ -102,7 +99,16 @@ class Inputbar extends React.Component {
     const base = 100;
     return Array.from(new Array(10), (v, i) => (
       <option key={i} value={base - i * 10}>
-        {base - i * 10 + " %"}
+        {base - i * 10}
+      </option>
+    ));
+  };
+
+  getDropCapacity = () => {
+    const base = 15;
+    return Array.from(new Array(11), (v, i) => (
+      <option key={i} value={base + i * 1}>
+        {base + i * 1}
       </option>
     ));
   };
@@ -121,6 +127,7 @@ class Inputbar extends React.Component {
       .then(res => res.json())
       .then(res => {
         //error handling
+        console.log(res)
         if (res["status"] == 1) {
           alert("[001] Less than 2 Locations were given!");
         } else if (res["status"] == 2) {
