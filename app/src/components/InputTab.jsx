@@ -5,30 +5,20 @@ import { withStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import CarIcon from "@material-ui/icons/DirectionsCar";
-// import Map from "@material-ui/icons/Map";
 import Navigation from "@material-ui/icons/Navigation";
-// import CarGasInput from "./UserInput";
 import UserInput from "../components/UserInput";
 import Typography from "@material-ui/core/Typography";
-// import Tripplan from "../components/backUps/Tripplan";
 import PathToGo from "../components/PathTogo";
-import "./InputTab.css"
+import GoogleMapDirection from "../components/GoogleMapDirection";
+import "./InputTab.css";
 
 const styles = {
   root: {
     flexGrow: 1,
-    maxWidth: 310,
+    maxWidth: 380,
     height: "80vh",
     backgroundColor: "#eef8fd",
-
-    // position: 'absolute',
-    // left: 0,
-    // right: 0,
-    // bottom: 0,
-    // background: "#ff4444",
-    // padding: "3px 8px",
-    // color: "#fff",
-    // zindex: "1"
+    display: "block"
   },
   header: {
     backgroundColor: "White"
@@ -37,7 +27,7 @@ const styles = {
 
 function TabContainer(props) {
   return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
+    <Typography component="div" style={{ padding: 1 }}>
       {props.children}
     </Typography>
   );
@@ -45,43 +35,75 @@ function TabContainer(props) {
 
 class IconLabelTabs extends React.Component {
   state = {
-    value: 0
+    value: 0,
+    //rechieving response from backend
+    response: {
+      status: 0,
+      gas_price: [0.0],
+      mileage: ["0 mi"],
+      trip1: [],
+      time: ["0 min"],
+      gallons_to_fuel: [0.0],
+      cost: [0.0]
+    }
   };
 
   handleChange = (event, value) => {
     this.setState({ value });
   };
 
+  //use the data from the child
+  response_to_state = dataFromChild => {
+    console.log(dataFromChild);
+    this.setState({ response: dataFromChild });
+    console.log(this.state.response);
+  };
+
   render() {
     const { classes } = this.props;
     const { value } = this.state;
+    var response = this.state.response;
 
     return (
-      <div className="float">
-      <Paper square className={classes.root}>
-        <Tabs
-          className={classes.header}
-          value={this.state.value}
-          onChange={this.handleChange}
-          fullWidth
-          indicatorColor="secondary"
-          textColor="secondary"
-        >
-          <Tab icon={<CarIcon />} label="Car&Gas&Destination" />
-          {/* <Tab icon={<Map />} label="Trip Plan" /> */}
-          <Tab icon={<Navigation />} label="Path to Go" />
-        </Tabs>
-      
-        {value === 0 && (
-          <TabContainer>
-            <UserInput />
-            {/* <CarGasInput /> */}
-          </TabContainer>
-        )}
-        {/* {value === 1 && <TabContainer><Tripplan /></TabContainer>} */}
-        {value === 1 && <TabContainer>{<PathToGo />}</TabContainer>}
-      </Paper>
-      {/* <GoogleMapDirection/> */}
+      <div>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-3">
+              <div className="float" styles={{ position: "absolute" }}>
+                <Paper square className={classes.root}>
+                  <Tabs
+                    className={classes.header}
+                    value={this.state.value}
+                    onChange={this.handleChange}
+                    fullWidth
+                    indicatorColor="secondary"
+                    textColor="secondary"
+                  >
+                    <Tab icon={<CarIcon />} label="Trip Info" />
+                    <Tab icon={<Navigation />} label="Path to Go" />
+                  </Tabs>
+
+                  {value === 0 && (
+                    <TabContainer>
+                      <UserInput
+                        key="1"
+                        callBackFromParent={this.response_to_state}
+                      />
+                    </TabContainer>
+                  )}
+                  {value === 1 && (
+                    <TabContainer>
+                      {<PathToGo listFromParent={response} />}
+                    </TabContainer>
+                  )}
+                </Paper>
+              </div>
+            </div>
+            <div class="col-md-9">
+              <GoogleMapDirection listFromParent={response} />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

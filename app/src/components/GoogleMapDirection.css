@@ -1,47 +1,51 @@
 .TripCost {
-	text-align: center;
+  text-align: center;
 }
 
 .TripCost-logo {
-	animation: App-logo-spin infinite 20s linear;
-	height: 80px;
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
 }
 
 .TripCost-header {
-	background-color: #222;
-	height: 150px;
-	padding: 20px;
-	color: white;
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
 }
 
 .TripCost-title {
-	font-size: 1.5em;
+  font-size: 1.5em;
 }
 
 .TripCost-intro {
-	font-size: large;
+  font-size: large;
 }
 
 @keyframes App-logo-spin {
-	from {
-		transform: rotate(0deg);
-	}
-	to {
-		transform: rotate(360deg);
-	}
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 #map {
-	padding-top: 165px;
-	height: 100vh;
+  padding-top: 165px;
+  height: 86vh;
+  position: "relative";
+  top: 120px;
+  z-index: 0;
+  height: 660px;
 }
-html, body {
-	/* height: 100%;
-	margin: 0;
-	padding: 0; */
-	position: absolute;
-	top: 0; left: 0; right: 0; bottom: 0;
-	background: #000;
-	z-index: 0;
+html,
+body {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #000;
+  z-index: 0;
 }
-

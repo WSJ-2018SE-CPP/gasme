@@ -1,0 +1,164 @@
+.waypoint-view {
+  position: relative;
+}
+
+.waypoint poi {
+  background: #f9f9f9;
+  position: relative;
+}
+
+.incoming-route-line {
+  background: rgba(84, 178, 182, 0.25);
+  border-radius: 0 0 2px 2px;
+  height: 40px;
+  position: absolute;
+  right: 24px;
+  top: 0;
+  width: 4px;
+  display: block;
+}
+
+.outgoing-route-line {
+  background: rgba(84, 178, 182, 0.25);
+  border-radius: 2px 2px 0 0;
+  bottom: 0;
+  position: absolute;
+  right: 24px;
+  top: 40px;
+  width: 4px;
+}
+
+.waypoint-leg {
+  align-items: center;
+  display: flex;
+  height: 1px;
+  margin: 0 36px 0 0;
+}
+
+.waypoint-card {
+  padding: 5px 10px;
+  display: block;
+}
+
+.waypoint-info {
+  align-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.waypoint-image {
+  flex: 0 0 70px;
+  position: relative;
+  width: 70px;
+  display: block;
+}
+
+.waypoint-details {
+  flex: 1 1 auto;
+  margin: 0 10px;
+  width: 0;
+  display: block;
+}
+
+.waypoint-index {
+  background: #0e4961;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  cursor: pointer;
+  flex: 0 0 46px;
+  height: 28px;
+  position: relative;
+  width: 46px;
+}
+
+.index {
+  border-radius: 50%;
+  height: 26px;
+  position: absolute;
+  text-align: center;
+  top: 0;
+  transform: translateX(18px);
+  transition: transform 125ms cubic-bezier(0, 0, 0.25, 1);
+  width: 26px;
+}
+
+.index-dig {
+  color: white;
+}
+
+.unrouted-icon {
+  color: #88939b;
+  opacity: 0;
+  display: block;
+}
+
+.routed-icon {
+  background: #464553;
+  color: white;
+  opacity: 1;
+  display: block;
+}
+
+.icon-cat-attractions {
+  color: #00acdc;
+}
+
+.address {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: darkgray;
+  font: 12px/18px "Axiforma", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.photo-name {
+  color: #6c84a0;
+  font: bold 16px/18px "Aktiv Grotesk", "HelveticaNeue-Light",
+    "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande",
+    sans-serif;
+  max-height: 36px;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.waypoint-break {
+  background: #e7e7e7;
+  flex: 1 1 100%;
+  height: 1px;
+  width: 100%;
+}
+
+.leg-stats {
+  color: #9b9b9b;
+  flex: 0 0 auto;
+  margin: 0 0 0 8px;
+  display: block;
+}
+
+.bullet {
+  margin: 0 2px;
+}
+
+.leg-trip-stat {
+  color: #9b9b9b;
+}
+
+.scroll-view {
+  position: relative;
+  height: 57vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  width: 100%;
+}
+
+.image {
+  background: #c2bebb center center no-repeat;
+  background-size: cover;
+  height: 70px;
+  position: relative;
+}
+
+.waypoint-icon {
+  width: 83px;
+  height: 80px;
+}

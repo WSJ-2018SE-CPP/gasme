@@ -18,9 +18,9 @@ class Inputbar extends React.Component {
       selectedYear: "2019",
       selectedLocal: "15",
       selectedHwy: "15",
-      selectedGas: "",
+      selectedGas: "Top",
       selectedGasLevel: "100",
-      selectedTankCapacity: "30",
+      selectedTankCapacity: "20",
       which_make: [],
       locaitonsComponent: [],
       locaitons: [],
@@ -36,7 +36,11 @@ class Inputbar extends React.Component {
         { value: "Civic Tourer", label: "Civic Tourer" },
         { value: "FR-V", label: "FR-V" }
       ],
-      gas: [{ value: "Shell", label: "shell" }, { value: "76", label: "76" }]
+      gas: [
+        { value: "Top", label: "Top 3" },
+        { value: "Shell", label: "Shell" },
+        { value: "Any", label: "Any" }
+      ]
     };
     this.addASearchBar = this.addASearchBar.bind(this);
     this.handleAddress = this.handleAddress.bind(this);
@@ -51,11 +55,6 @@ class Inputbar extends React.Component {
     console.log("add div is clicked");
     var locations = this.state.locaitonsComponent.concat(LocationSearchInput);
     this.setState({ locaitonsComponent: locations });
-    // if (this.state.locaitons.length < 4) {
-    //   var locations = LocationSearchInput;
-    //   this.setState({ locaitons: [...this.state.locaitons, locations] });
-    //   //console.log(this.state.locaitons[0]);
-    // }
   }
 
   deleteASearchBar = () => {
@@ -121,7 +120,9 @@ class Inputbar extends React.Component {
   };
 
   getDropListYear = () => {
+    var indents = [];
     const year = new Date().getFullYear() + 1;
+    indents.push();
     return Array.from(new Array(50), (v, i) => (
       <option key={i} value={year - i}>
         {year - i}
@@ -131,7 +132,7 @@ class Inputbar extends React.Component {
 
   getDropListGas = () => {
     const base = 15;
-    return Array.from(new Array(20), (v, i) => (
+    return Array.from(new Array(16), (v, i) => (
       <option key={i} value={base + i}>
         {base + i}
       </option>
@@ -148,7 +149,7 @@ class Inputbar extends React.Component {
   };
 
   getDropCapacity = () => {
-    const base = 10;
+    const base = 20;
     return Array.from(new Array(11), (v, i) => (
       <option key={i} value={base + i * 2}>
         {base + i * 2}
@@ -168,7 +169,20 @@ class Inputbar extends React.Component {
       body: JSON.stringify(this.state)
     })
       .then(res => res.json())
-      .then(res => console.log(res));
+      .then(res => {
+        //error handling
+        if (res["status"] == 1) {
+          alert("[001] Less than 2 Locations were given!");
+        } else if (res["status"] == 2) {
+          alert(
+            "[002] One or more of the give Location(s) does NOT exist or is outside of the USA"
+          );
+        } else {
+          //pass the data to parent:??
+          this.props.callBackFromParent(res);
+          console.log(res);
+        }
+      });
   };
 
   handleAddress(address) {
@@ -189,20 +203,24 @@ class Inputbar extends React.Component {
         this.state.locaitonsComponent.length.toString()
     );
 
-    console.log("in render: locations#: " + this.state.locaitons.length.toString());
+    console.log(
+      "in render: locations#: " + this.state.locaitons.length.toString()
+    );
     console.log("in render: locations: " + this.state.locaitons);
 
+    const year = this.getDropListYear();
     return (
-      <div>
-        <div>
-          <div>Locations: {locaitons}</div>
+      <div className="filter">
+        <div className="input-sec">
+          <h3 className="heading-first">Locations</h3>
+          <div>{locaitons}</div>
           <div>
             <AddIcon color="primary" onClick={this.addASearchBar} />
             <CancelIcon onClick={this.deleteASearchBar} />
           </div>
         </div>
-        <div>
-          <span>======== Car Information ========</span>
+        <div className="input-sec">
+          <h3 className="heading-first">Car</h3>
           <Select
             name="cars"
             value={this.state.selectedCarBrand}
@@ -217,13 +235,17 @@ class Inputbar extends React.Component {
             options={this.state.which_make}
             placeholder="Car Made"
           />
-          <select onChange={this.updateYear} value={this.selectedYear}>
+          <select
+            className="select"
+            onChange={this.updateYear}
+            value={this.selectedYear}
+          >
             {this.getDropListYear()}
           </select>
         </div>
 
-        <div>
-          <span>======= Gas Consumption =======</span>
+        <div className="input-sec">
+          <h3 className="heading-first">Gas</h3>
           <p />
           <label>Local</label>{" "}
           <select onChange={this.updateLocal} value={this.selectedLocal}>
@@ -253,8 +275,9 @@ class Inputbar extends React.Component {
           %
         </div>
 
-        <div>
-          <span>========= Gas Brand =========</span>
+        <div className="input-sec">
+          <h3 className="heading-first">Gas Brand</h3>
+
           <Select
             name="gas"
             value={this.state.selectedGas}
