@@ -7,7 +7,7 @@ import { Button } from "react-bootstrap";
 import LocationSearchInput from "./LocationSearchInput";
 import AddIcon from "@material-ui/icons/AddCircle";
 import CancelIcon from "@material-ui/icons/Cancel";
-import {ReactLoadingView} from 'react-spinner-component';
+import { ReactLoadingView } from 'react-spinner-component';
 import logoImg from "../img/gasMe.png";
 
 class Inputbar extends React.Component {
@@ -36,7 +36,7 @@ class Inputbar extends React.Component {
     this.addASearchBar = this.addASearchBar.bind(this);
     this.handleAddress = this.handleAddress.bind(this);
   }
-  
+
   //Removed to avoid "invisible input bar"
   /*
   componentDidMount() {
@@ -134,10 +134,13 @@ class Inputbar extends React.Component {
 
   postItems = () => {
     console.log(`posting to python with ${this.state.selectedGasLevel}`);
-    if (this.state.locaitons.includes("")) {
+    //Check number of locations on front end instead of checking response 
+    if (this.state.locaitons.length < 2) {
+      alert("[001] Less than 2 Locations are given!");
+    } else if (this.state.locaitons.includes("")) {
       alert("[003] One or more of the input bar(s) are empty.");
     } else {
-      this.setState({isLoading: true})
+      this.setState({ isLoading: true })
       fetch("http://54.183.10.84:5000/", {
         method: "post",
         //mode: 'no cors',
@@ -150,11 +153,9 @@ class Inputbar extends React.Component {
         .then(res => res.json())
         .then(res => {
           //error handling
-          this.setState({isLoading: false})
+          this.setState({ isLoading: false })
           console.log(res);
-          if (res["status"] == 1) {
-            alert("[001] Less than 2 Locations are given!");
-          } else if (res["status"] == 2) {
+          if (res["status"] == 2) {
             alert(
               "[002] One or more of the given location(s) do NOT exist or exist outside of the USA."
             );
@@ -190,7 +191,7 @@ class Inputbar extends React.Component {
 
     console.log(
       "in render: location component#" +
-        this.state.locaitonsComponent.length.toString()
+      this.state.locaitonsComponent.length.toString()
     );
 
     console.log(
@@ -279,8 +280,8 @@ class Inputbar extends React.Component {
           logoSrc={logoImg}
           LoaderView='line-scale'
           customheight='100%'
-          text='Calculating Route...' 
-          customClassAdd = 'class'
+          text='Calculating Route...'
+          customClassAdd='class'
         >
         </ReactLoadingView>}
       </div>
