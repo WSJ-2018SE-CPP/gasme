@@ -274,11 +274,11 @@ class Inputbar extends React.Component {
         {this.state.isLoading && <ReactLoadingView
           loading={true}
           bgColor='#f1f1f1'
-          spinnerColor='#E88634'
+          spinnerColor='steelblue'
           textColor='#676767'
-          textStyle='100'
+          textStyle='80'
           logoSrc={logoImg}
-          LoaderView='line-scale'
+          LoaderView='ball-beat'
           customheight='100%'
           text='Calculating Route...'
           customClassAdd='class'
