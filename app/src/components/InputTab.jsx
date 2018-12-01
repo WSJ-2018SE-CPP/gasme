@@ -65,6 +65,8 @@ class IconLabelTabs extends React.Component {
     console.log(dataFromChild);
     this.setState({ response: dataFromChild });
     console.log(this.state.response);
+    //Make sure pathToGo is rerendered even when currently at pathToGo Tab
+    this.setState({ value: 0 });
     this.setState({ value: 1 });
   };
 

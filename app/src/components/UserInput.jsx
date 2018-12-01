@@ -7,6 +7,8 @@ import { Button } from "react-bootstrap";
 import LocationSearchInput from "./LocationSearchInput";
 import AddIcon from "@material-ui/icons/AddCircle";
 import CancelIcon from "@material-ui/icons/Cancel";
+import {ReactLoadingView} from 'react-spinner-component';
+import logoImg from "../img/gasMe.png";
 
 class Inputbar extends React.Component {
   constructor(props) {
@@ -135,6 +137,7 @@ class Inputbar extends React.Component {
     if (this.state.locaitons.includes("")) {
       alert("[003] One or more of the input bar(s) are empty.");
     } else {
+      this.setState({isLoading: true})
       fetch("http://54.183.10.84:5000/", {
         method: "post",
         //mode: 'no cors',
@@ -147,6 +150,7 @@ class Inputbar extends React.Component {
         .then(res => res.json())
         .then(res => {
           //error handling
+          this.setState({isLoading: false})
           console.log(res);
           if (res["status"] == 1) {
             alert("[001] Less than 2 Locations are given!");
@@ -266,6 +270,19 @@ class Inputbar extends React.Component {
             SUBMIT
           </Button>
         </div>
+        {this.state.isLoading && <ReactLoadingView
+          loading={true}
+          bgColor='#f1f1f1'
+          spinnerColor='#E88634'
+          textColor='#676767'
+          textStyle='100'
+          logoSrc={logoImg}
+          LoaderView='line-scale'
+          customheight='100%'
+          text='Calculating Route...' 
+          customClassAdd = 'class'
+        >
+        </ReactLoadingView>}
       </div>
     );
   }
