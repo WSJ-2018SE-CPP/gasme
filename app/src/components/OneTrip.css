@@ -118,6 +118,7 @@
     sans-serif;
   max-height: 36px;
   overflow: hidden;
+  text-overflow: ellipsis;
   word-break: break-word;
 }
 

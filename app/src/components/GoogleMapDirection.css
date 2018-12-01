@@ -51,50 +51,53 @@ body {
 }
 
 /* Below is for PopOver */
-/* .map-popover-content {
-  align-items: center;
-  background: white;
-  border-radius: 3px;
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
-  display: flex;
+.info-box-wrap {
+  background: #fff;
+  overflow: hidden;
+  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.08);
 }
 
-.image {
-  background: #c3cbd7 center center no-repeat;
-  background-size: cover;
-  border-radius: 3px 0 0 3px;
-  flex: 0 0 60px;
-  height: 60px;
-  position: relative;
-  width: 60px;
+.info-box-text-wrap {
+  height: 80px !important;
+  width: 200px;
+  float: left;
+  overflow: hidden;
 }
 
-.info {
-  flex: 1 1 auto;
-  margin: 0 5px;
-  text-align: left;
-  width: 0;
-  display: block;
+.address {
+  padding: 6px 5px 1px 0;
+  margin: 0 0 0 0;
+  color: #6c84a0;
+  font: bold 16px/18px "Aktiv Grotesk", "HelveticaNeue-Light",
+    "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande",
+    sans-serif;
+  max-height: 36px;
+  overflow: hidden;
+  text-overflow: hidden;
+  word-break: break-word;
+}
+.info-box-text-wrap p {
+  padding: 0 0 0 0;
+  margin: 0 0 0 0;
+}
+.price {
+  color: #b25b00;
 }
 
-.name {
-  color: #202020;
-  font: 14px/16px Helvetica;
-  word-wrap: break-word;
+.img {
+  width: 75px;
+  height: 71px;
+  float: left;
+  margin-right: 10px;
+  padding-top: 0;
+  margin-top: 0;
 }
 
-.stats {
-  color: #5a595b;
-  font: 12px/16px Helvetica;
-  display: block;
+.gasStationIcon {
+  margin: -5px 2px 0px 12px;
 }
 
-.attractions {
-  color: #00acdc;
+.yourStop {
+  font-weight: 100;
+  color: #c5b20a;
 }
-
-.price-range {
-  color: #5a595b;
-  font: 12px/16px Helvetica;
-}
- */

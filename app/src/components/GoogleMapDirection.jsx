@@ -4,6 +4,7 @@ import "./GoogleMapDirection.css";
 import gasBrandIcon from "../img/gas_station_building.jpg";
 import homeImg from "../img/home_real.jpg";
 import parkImg from "../img/park.jpg";
+import GasCostIcon from "@material-ui/icons/LocalGasStation";
 
 class GoogleMapDirection extends Component {
   state = {
@@ -217,16 +218,19 @@ function setPopOver(index, address, brand, price, len) {
   console.log(index + " " + address + " " + brand + " " + price);
 
   return (
-    <div class="map-popover-content">
-      <div class="image">
-        <img className="waypoint-icon" src={thumbnail} />
-      </div>
-      <div class="info">
-        <div class="name">{address}</div>
-        <div class="stats">
-          <span class="attractions">{brand}</span>
-          <span class="price-range">${price}</span>
-        </div>
+    <div className="info-box-wrap">
+      <img className="img" src={thumbnail} />
+      <div className="info-box-text-wrap">
+        <h6 className="address">{address}</h6>
+        {price > 0 && (
+          <div className="row">
+            <div className="gasStationIcon">
+              <GasCostIcon />
+            </div>
+            <p className="price">${price}</p>
+          </div>
+        )}
+        {price === 0 && <p className="yourStop">Your desired stop</p>}
       </div>
     </div>
   );
