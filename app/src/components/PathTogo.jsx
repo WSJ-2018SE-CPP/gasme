@@ -29,9 +29,6 @@ class PathToGo extends Component {
 
     mileage_in_digits: [],
     time_in_digits: [],
-
-    openTrip1: 0,
-    openTrip2: 0
   };
 
   componentWillMount() {
@@ -63,16 +60,6 @@ class PathToGo extends Component {
     console.log(
       "in testing convertTime ->" + converTime("1 min", "hour", "min") + "<-"
     );
-  }
-
-  handleIconFlip() {
-    if (this.state.openTrip1 === 1) {
-      this.setState({ openTrip1: 0 });
-      return <ArrowDropDownIcon />;
-    } else {
-      this.setState({ openTrip1: 1 });
-      return <ArrowRightIcon />;
-    }
   }
 
   trip_summary(total_gas_price, total_time, total_mileage, total_stop) {
