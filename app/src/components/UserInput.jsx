@@ -137,10 +137,10 @@ class Inputbar extends React.Component {
         //error handling
         console.log(res)
         if (res["status"] == 1) {
-          alert("[001] Less than 2 Locations were given!");
+          alert("[001] Less than 2 Locations are given!");
         } else if (res["status"] == 2) {
           alert(
-            "[002] One or more of the give Location(s) does NOT exist or is outside of the USA"
+            "[002] One or more of the given location(s) do NOT exist or exist outside of the USA."
           );
         } else {
           //pass the data to parent:??
