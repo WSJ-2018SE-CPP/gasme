@@ -116,33 +116,6 @@ class GoogleMapDirection extends Component {
     );
   }
 
-  setPopOver(index, address, brand, price) {
-    var thumbnail = gasBrandIcon;
-    if (index === 0) {
-      console.log("index is 0");
-      thumbnail = homeImg;
-    } else if (index === this.state.res_gas_price.length - 1) {
-      thumbnail = parkImg;
-      console.log("index is end");
-    }
-    console.log(index + " " + address + " " + brand + " " + price);
-
-    return (
-      <div class="map-popover-content">
-        <div class="image">
-          <img className="waypoint-icon" src={thumbnail} />
-        </div>
-        <div class="info">
-          <div class="name">{address}</div>
-          <div class="stats">
-            <span class="attractions">{brand}</span>
-            <span class="price-range">${price}</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   setMarkers = map => {
     // Adds markers to the map.
 
@@ -161,6 +134,8 @@ class GoogleMapDirection extends Component {
       labelOrigin: new window.google.maps.Point(9, -10)
     };
     var infowindow = new window.google.maps.InfoWindow();
+    var contentString = "";
+    var ReactDOMServer = require("react-dom/server");
 
     for (var i = 0; i < this.state.res_trip1.length; i++) {
       var address = this.state.res_trip1[i].address;
@@ -168,6 +143,7 @@ class GoogleMapDirection extends Component {
       var gasPrice = this.state.res_gas_price[i];
       const lat = parseFloat(this.state.res_trip1[i].lat);
       const long = parseFloat(this.state.res_trip1[i].long);
+      const len = this.state.res_gas_price.length;
       if (this.state.res_trip1[i].is_gas_station === 0) {
         var marker = new window.google.maps.Marker({
           position: { lat: lat, lng: long },
@@ -193,16 +169,15 @@ class GoogleMapDirection extends Component {
         });
       }
 
-      var ReactDOMServer = require("react-dom/server");
-      var contentString = ReactDOMServer.renderToString(
-        this.setPopOver(i, address, name, gasPrice)
-      );
       window.google.maps.event.addListener(
         marker,
         "mouseover",
         (function(marker, i) {
+          var contentStrin = ReactDOMServer.renderToString(
+            setPopOver(i, address, name, gasPrice, len)
+          );
           return function() {
-            infowindow.setContent(contentString);
+            infowindow.setContent(contentStrin);
             infowindow.open(map, marker);
           };
         })(marker, i)
@@ -228,4 +203,31 @@ function loadScript(url) {
   script.async = true;
   script.defer = true;
   index.parentNode.insertBefore(script, index);
+}
+
+function setPopOver(index, address, brand, price, len) {
+  var thumbnail = gasBrandIcon;
+  if (index === 0) {
+    console.log("index is 0");
+    thumbnail = homeImg;
+  } else if (index === len - 1) {
+    thumbnail = parkImg;
+    console.log("index is end");
+  }
+  console.log(index + " " + address + " " + brand + " " + price);
+
+  return (
+    <div class="map-popover-content">
+      <div class="image">
+        <img className="waypoint-icon" src={thumbnail} />
+      </div>
+      <div class="info">
+        <div class="name">{address}</div>
+        <div class="stats">
+          <span class="attractions">{brand}</span>
+          <span class="price-range">${price}</span>
+        </div>
+      </div>
+    </div>
+  );
 }
