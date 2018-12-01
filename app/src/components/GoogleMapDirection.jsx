@@ -122,9 +122,9 @@ class GoogleMapDirection extends Component {
     // direction to the right and in the Y direction down.
     var icon = {
       url:
-      "http://1.bp.blogspot.com/_GZzKwf6g1o8/S6xwK6CSghI/AAAAAAAAA98/_iA3r4Ehclk/s1600/marker-green.png",
+        "http://1.bp.blogspot.com/_GZzKwf6g1o8/S6xwK6CSghI/AAAAAAAAA98/_iA3r4Ehclk/s1600/marker-green.png",
       // url:
-        // "/Users/xlei/Documents/off-jpl/SE/gasmeFinal/app/src/img/gasStationGreen.png",
+      // "/Users/xlei/Documents/off-jpl/SE/gasmeFinal/app/src/img/gasStationGreen.png",
       size: new window.google.maps.Size(20, 32),
       origin: new window.google.maps.Point(0, 0),
       anchor: new window.google.maps.Point(0, 32),
@@ -132,6 +132,9 @@ class GoogleMapDirection extends Component {
     };
     var infowindow = new window.google.maps.InfoWindow();
     var ReactDOMServer = require("react-dom/server");
+    var index = i;
+    var cur_stop = 65;
+    var number_of_stops = 0;
 
     for (var i = 0; i < this.state.res_trip1.length; i++) {
       var address = this.state.res_trip1[i].address;
@@ -141,26 +144,28 @@ class GoogleMapDirection extends Component {
       const long = parseFloat(this.state.res_trip1[i].long);
       const len = this.state.res_gas_price.length;
       if (this.state.res_trip1[i].is_gas_station === 0) {
+        index = String.fromCharCode(cur_stop);
+        cur_stop += 1;
         var marker = new window.google.maps.Marker({
           position: { lat: lat, lng: long },
           map: map,
           label: {
-            text: (i + 1).toString(),
+            text: index,
             color: "white",
             fontWeight: "bold",
             fontSize: "14px"
           }
         });
       } else {
+        number_of_stops += 1;
         var marker = new window.google.maps.Marker({
           position: { lat: lat, lng: long },
           map: map,
           icon: icon,
           label: {
-            text: gasPrice.toString(),
-            color: "red",
-            // fontWeight: "bold",
-            fontSize: "16px"
+            text: number_of_stops.toString() + "-$" + gasPrice.toString(),
+            color: "#b22a00",
+            fontSize: "14px"
           }
         });
       }
