@@ -45,9 +45,11 @@ class Inputbar extends React.Component {
   //Modified to make each input bar correspond to each location
   addASearchBar() {
     console.log("add div is clicked");
+    //add a locationSearch component
     var locations = this.state.locaitonsComponent.concat(LocationSearchInput);
     this.setState({ locaitonsComponent: locations });
 
+    //add a valid location
     const locate = this.state.locaitons;
     locate.push("");
     this.setState({ locations: locate });
@@ -57,10 +59,12 @@ class Inputbar extends React.Component {
   deleteASearchBar = () => {
     console.log("delete div is clicked");
     if (this.state.locaitonsComponent.length > 1) {
+      //pop a locationSearch component
       var locations = this.state.locaitonsComponent;
       locations.pop();
       this.setState({ locaitonsComponent: locations });
 
+      //pop a valid location
       const locate = this.state.locaitons;
       locate.pop();
       this.setState({ locations: locate });
@@ -126,7 +130,7 @@ class Inputbar extends React.Component {
   postItems = () => {
     console.log(`posting to python with ${this.state.selectedGasLevel}`);
     if(this.state.locaitons.includes("")){
-      alert("[003] One or more of the input bar(s) is empty")
+      alert("[003] One or more of the input bar(s) are empty.")
     }
     else {
       fetch("http://54.183.10.84:5000/", {
@@ -170,7 +174,11 @@ class Inputbar extends React.Component {
     const locaitons = this.state.locaitonsComponent.map((Element, index) => {
       return (
         //Modified to make each input bar correspond to each location
-        <Element key={index} index={index} handleAddress={this.handleAddress.bind(this, index)} />
+        <Element
+          key={index}
+          index={index}
+          handleAddress={this.handleAddress.bind(this, index)}
+        />
       );
     });
 
