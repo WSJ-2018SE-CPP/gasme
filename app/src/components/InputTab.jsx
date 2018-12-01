@@ -62,6 +62,7 @@ class IconLabelTabs extends React.Component {
     console.log(dataFromChild);
     this.setState({ response: dataFromChild });
     console.log(this.state.response);
+    this.setState({value: 1});
   };
 
   render() {
