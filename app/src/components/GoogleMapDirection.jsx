@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import ReactDOMServer from "react-dom/server";
 import "./GoogleMapDirection.css";
 import gasBrandIcon from "../img/gas_station_building.jpg";
 import homeImg from "../img/home_real.jpg";
@@ -66,7 +65,6 @@ class GoogleMapDirection extends Component {
     directionsDisplay.setMap(map);
 
     this.calculateAndDisplayRouteWayPoints(
-      map,
       directionsService,
       directionsDisplay
     );
@@ -74,7 +72,7 @@ class GoogleMapDirection extends Component {
     this.setMarkers(map);
   };
 
-  calculateAndDisplayRouteWayPoints(map, directionsService, directionsDisplay) {
+  calculateAndDisplayRouteWayPoints(directionsService, directionsDisplay) {
     var waypts = [];
     var origin;
     var destination;
@@ -107,9 +105,6 @@ class GoogleMapDirection extends Component {
       function(response, status) {
         if (status === "OK") {
           directionsDisplay.setDirections(response);
-          var leg = response.routes[0].legs[0];
-          //setMarker(map, leg.start_location, 'title', '0');
-          //setMarker(map, leg.end_location, 'title', '0');
         } else {
           window.alert("Directions request failed due to " + status);
         }
@@ -127,15 +122,15 @@ class GoogleMapDirection extends Component {
     // direction to the right and in the Y direction down.
     var icon = {
       url:
-        "http://1.bp.blogspot.com/_GZzKwf6g1o8/S6xwK6CSghI/AAAAAAAAA98/_iA3r4Ehclk/s1600/marker-green.png",
-      //url: "gasStop.png",
+      "http://1.bp.blogspot.com/_GZzKwf6g1o8/S6xwK6CSghI/AAAAAAAAA98/_iA3r4Ehclk/s1600/marker-green.png",
+      // url:
+        // "/Users/xlei/Documents/off-jpl/SE/gasmeFinal/app/src/img/gasStationGreen.png",
       size: new window.google.maps.Size(20, 32),
       origin: new window.google.maps.Point(0, 0),
       anchor: new window.google.maps.Point(0, 32),
       labelOrigin: new window.google.maps.Point(9, -10)
     };
     var infowindow = new window.google.maps.InfoWindow();
-    var contentString = "";
     var ReactDOMServer = require("react-dom/server");
 
     for (var i = 0; i < this.state.res_trip1.length; i++) {
@@ -153,7 +148,7 @@ class GoogleMapDirection extends Component {
             text: (i + 1).toString(),
             color: "white",
             fontWeight: "bold",
-            fontSize: "16px"
+            fontSize: "14px"
           }
         });
       } else {
@@ -164,7 +159,7 @@ class GoogleMapDirection extends Component {
           label: {
             text: gasPrice.toString(),
             color: "red",
-            fontWeight: "bold",
+            // fontWeight: "bold",
             fontSize: "16px"
           }
         });
@@ -183,6 +178,10 @@ class GoogleMapDirection extends Component {
           };
         })(marker, i)
       );
+
+      window.google.maps.event.addListener(marker, "mouseout", function() {
+        infowindow.close();
+      });
     }
   };
 
@@ -208,14 +207,14 @@ function loadScript(url) {
 
 function setPopOver(index, address, brand, price, len) {
   var thumbnail = gasBrandIcon;
+  var text = "Your desired stop";
   if (index === 0) {
-    console.log("index is 0");
     thumbnail = homeImg;
+    text = "Your desired origin";
   } else if (index === len - 1) {
     thumbnail = parkImg;
-    console.log("index is end");
+    text = "Your desired destination";
   }
-  console.log(index + " " + address + " " + brand + " " + price);
 
   return (
     <div className="info-box-wrap">
@@ -230,7 +229,7 @@ function setPopOver(index, address, brand, price, len) {
             <p className="price">${price}</p>
           </div>
         )}
-        {price === 0 && <p className="yourStop">Your desired stop</p>}
+        {price === 0 && <p className="yourStop">{text}</p>}
       </div>
     </div>
   );

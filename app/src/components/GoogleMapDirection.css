@@ -52,6 +52,7 @@ body {
 
 /* Below is for PopOver */
 .info-box-wrap {
+  margin: 0 0 0 0;
   background: #fff;
   overflow: hidden;
   box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.08);
@@ -66,14 +67,13 @@ body {
 
 .address {
   padding: 6px 5px 1px 0;
-  margin: 0 0 0 0;
+  margin: 0 0 10px 0;
+  font-family: "Roboto Slab";
   color: #6c84a0;
-  font: bold 16px/18px "Aktiv Grotesk", "HelveticaNeue-Light",
-    "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande",
-    sans-serif;
+  font-weight: 700;
+  white-space: nowrap;
   max-height: 36px;
-  overflow: hidden;
-  text-overflow: hidden;
+  overflow: ellipsis;
   word-break: break-word;
 }
 .info-box-text-wrap p {
