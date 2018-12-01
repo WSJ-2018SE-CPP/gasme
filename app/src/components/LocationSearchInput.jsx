@@ -35,7 +35,6 @@ class LocationSearchInput extends React.Component {
   };
 
   componentDidMount() {
-    window.initMap = this.initMap;
     const gmapScriptEl = document.createElement("script");
     const API_key = "AIzaSyDaB2geFvRw5ZEfxXl8jU1VBxi8-TNL-IY";
     gmapScriptEl.src =
@@ -45,6 +44,7 @@ class LocationSearchInput extends React.Component {
     document
       .querySelector("body")
       .insertAdjacentElement("beforeend", gmapScriptEl);
+    window.initMap = this.initMap;
     console.log("inside LocationSearch: " + this.props.address);
   }
 

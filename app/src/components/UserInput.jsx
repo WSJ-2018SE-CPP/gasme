@@ -19,10 +19,10 @@ class Inputbar extends React.Component {
       selectedGas: "",
       selectedYear: "2019",
       selectedLocal: "15",
-      selectedHwy: "15",
+      selectedHwy: "24",
       selectedGas: "Top",
       selectedGasLevel: "100",
-      selectedTankCapacity: "20",
+      selectedTankCapacity: "15",
       locaitonsComponent: [],
       locaitons: [],
       gas: [
@@ -38,6 +38,8 @@ class Inputbar extends React.Component {
   componentDidMount() {
     var locations = this.state.locaitonsComponent.concat(LocationSearchInput);
     this.setState({ locaitonsComponent: locations });
+
+    this.setState({locaitons: [""]})
   }
 
   //Modified to make each input bar correspond to each location
@@ -123,31 +125,36 @@ class Inputbar extends React.Component {
 
   postItems = () => {
     console.log(`posting to python with ${this.state.selectedGasLevel}`);
-    fetch("http://54.183.10.84:5000/", {
-      method: "post",
-      //mode: 'no cors',
-      headers: {
-        Accept: "application/json, text/plain, */*",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(this.state)
-    })
-      .then(res => res.json())
-      .then(res => {
-        //error handling
-        console.log(res)
-        if (res["status"] == 1) {
-          alert("[001] Less than 2 Locations are given!");
-        } else if (res["status"] == 2) {
-          alert(
-            "[002] One or more of the given location(s) do NOT exist or exist outside of the USA."
-          );
-        } else {
-          //pass the data to parent:??
-          this.props.callBackFromParent(res);
-          console.log(res);
-        }
-      });
+    if(this.state.locaitons.includes("")){
+      alert("[003] One or more of the input bar(s) is empty")
+    }
+    else {
+      fetch("http://54.183.10.84:5000/", {
+        method: "post",
+        //mode: 'no cors',
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(this.state)
+      })
+        .then(res => res.json())
+        .then(res => {
+          //error handling
+          console.log(res)
+          if (res["status"] == 1) {
+            alert("[001] Less than 2 Locations are given!");
+          } else if (res["status"] == 2) {
+            alert(
+              "[002] One or more of the given location(s) do NOT exist or exist outside of the USA."
+            );
+          } else {
+            //pass the data to parent:??
+            this.props.callBackFromParent(res);
+            console.log(res);
+          }
+        });
+      }
   };
 
   //Modified to make each input bar correspond to each location
