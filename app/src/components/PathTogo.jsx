@@ -80,7 +80,7 @@ class PathToGo extends Component {
     //control to show only when there is a route, otherwise no trip summary or details
     if (this.state.res_trip1.length > 1) {
       indents.push(
-        <div>
+        <div key='1'>
           <div style={{ backgroundColor: bgColors.Blue }}>
             <ArrowDropDownIcon />
             <label style={{ fontSize: "16px" }}>Trip</label> <TimeIcon />
