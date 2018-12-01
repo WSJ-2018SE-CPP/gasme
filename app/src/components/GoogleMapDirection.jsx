@@ -1,6 +1,9 @@
 import React, { Component } from "react";
+import ReactDOMServer from "react-dom/server";
 import "./GoogleMapDirection.css";
-import PopOver from "../components/PopOver";
+import gasBrandIcon from "../img/gas_station_building.jpg";
+import homeImg from "../img/home_real.jpg";
+import parkImg from "../img/park.jpg";
 
 class GoogleMapDirection extends Component {
   state = {
@@ -76,7 +79,10 @@ class GoogleMapDirection extends Component {
     var destination;
     for (var i = 0; i < this.state.res_trip1.length; i++) {
       var item = this.state.res_trip1[i];
-      var location = new window.google.maps.LatLng(item.lat, item.long);
+      var location = new window.google.maps.LatLng(
+        parseFloat(item.lat),
+        parseFloat(item.long)
+      );
       if (i !== 0 && i !== this.state.res_trip1.length - 1) {
         waypts.push({
           location: location,
@@ -110,6 +116,33 @@ class GoogleMapDirection extends Component {
     );
   }
 
+  setPopOver(index, address, brand, price) {
+    var thumbnail = gasBrandIcon;
+    if (index === 0) {
+      console.log("index is 0");
+      thumbnail = homeImg;
+    } else if (index === this.state.res_gas_price.length - 1) {
+      thumbnail = parkImg;
+      console.log("index is end");
+    }
+    console.log(index + " " + address + " " + brand + " " + price);
+
+    return (
+      <div class="map-popover-content">
+        <div class="image">
+          <img className="waypoint-icon" src={thumbnail} />
+        </div>
+        <div class="info">
+          <div class="name">{address}</div>
+          <div class="stats">
+            <span class="attractions">{brand}</span>
+            <span class="price-range">${price}</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   setMarkers = map => {
     // Adds markers to the map.
 
@@ -127,19 +160,14 @@ class GoogleMapDirection extends Component {
       anchor: new window.google.maps.Point(0, 32),
       labelOrigin: new window.google.maps.Point(9, -10)
     };
-    // Shapes define the clickable region of the icon. The type defines an HTML
-    // <area> element 'poly' which traces out a polygon as a series of X,Y points.
-    // The final coordinate closes the poly by connecting to the first coordinate.
-    var shape = {
-      coords: [1, 1, 1, 20, 18, 20, 18, 1],
-      type: "poly"
-    };
+    var infowindow = new window.google.maps.InfoWindow();
 
     for (var i = 0; i < this.state.res_trip1.length; i++) {
-      var place = this.state.res_trip1[i];
+      var address = this.state.res_trip1[i].address;
+      var name = this.state.res_trip1[i].name;
       var gasPrice = this.state.res_gas_price[i];
-      const lat = this.state.res_trip1[i].lat;
-      const long = this.state.res_trip1[i].long;
+      const lat = parseFloat(this.state.res_trip1[i].lat);
+      const long = parseFloat(this.state.res_trip1[i].long);
       if (this.state.res_trip1[i].is_gas_station === 0) {
         var marker = new window.google.maps.Marker({
           position: { lat: lat, lng: long },
@@ -150,7 +178,6 @@ class GoogleMapDirection extends Component {
             fontWeight: "bold",
             fontSize: "16px"
           }
-          //title: beach[0]
         });
       } else {
         var marker = new window.google.maps.Marker({
@@ -165,6 +192,21 @@ class GoogleMapDirection extends Component {
           }
         });
       }
+
+      var ReactDOMServer = require("react-dom/server");
+      var contentString = ReactDOMServer.renderToString(
+        this.setPopOver(i, address, name, gasPrice)
+      );
+      window.google.maps.event.addListener(
+        marker,
+        "mouseover",
+        (function(marker, i) {
+          return function() {
+            infowindow.setContent(contentString);
+            infowindow.open(map, marker);
+          };
+        })(marker, i)
+      );
     }
   };
 
