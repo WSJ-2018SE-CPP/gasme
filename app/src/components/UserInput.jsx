@@ -41,7 +41,7 @@ class Inputbar extends React.Component {
     var locations = this.state.locaitonsComponent.concat(LocationSearchInput);
     this.setState({ locaitonsComponent: locations });
 
-    this.setState({locaitons: [""]})
+    this.setState({ locaitons: [""] });
   }*/
 
   //Modified to make each input bar correspond to each location
@@ -131,10 +131,9 @@ class Inputbar extends React.Component {
 
   postItems = () => {
     console.log(`posting to python with ${this.state.selectedGasLevel}`);
-    if(this.state.locaitons.includes("")){
-      alert("[003] One or more of the input bar(s) are empty.")
-    }
-    else {
+    if (this.state.locaitons.includes("")) {
+      alert("[003] One or more of the input bar(s) are empty.");
+    } else {
       fetch("http://54.183.10.84:5000/", {
         method: "post",
         //mode: 'no cors',
@@ -147,7 +146,7 @@ class Inputbar extends React.Component {
         .then(res => res.json())
         .then(res => {
           //error handling
-          console.log(res)
+          console.log(res);
           if (res["status"] == 1) {
             alert("[001] Less than 2 Locations are given!");
           } else if (res["status"] == 2) {
@@ -160,7 +159,7 @@ class Inputbar extends React.Component {
             console.log(res);
           }
         });
-      }
+    }
   };
 
   //Modified to make each input bar correspond to each location

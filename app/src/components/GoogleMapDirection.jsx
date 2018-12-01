@@ -4,7 +4,7 @@ import PopOver from "../components/PopOver";
 
 class GoogleMapDirection extends Component {
   state = {
-    count: 0,//flag for render
+    count: 0, //flag for render
     res_status: [],
     res_gas_price: this.props.listFromParent.gas_price,
     res_mileage: [],
@@ -18,18 +18,17 @@ class GoogleMapDirection extends Component {
   };
 
   // check when to render
-  shouldComponentUpdate(nextProps, nextState){
+  shouldComponentUpdate(nextProps, nextState) {
     //render for the first time we click path to go
-    if(this.state.count == 0){
-      this.renderMap()
-      this.setState({ count: 1});
+    if (this.state.count == 0) {
+      this.renderMap();
+      this.setState({ count: 1 });
     }
     //otherwise, check if current state is the same as the next one
-    if(this.state.res_trip1 === nextProps.listFromParent.trip1) {
+    if (this.state.res_trip1 === nextProps.listFromParent.trip1) {
       return false;
-    }
-    else {
-      this.renderMap()
+    } else {
+      this.renderMap();
       return true;
     }
   }

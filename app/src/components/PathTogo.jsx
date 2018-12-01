@@ -75,24 +75,38 @@ class PathToGo extends Component {
     }
   }
 
+  trip_summary(total_gas_price, total_time, total_mileage, total_stop) {
+    var indents = [];
+    //control to show only when there is a route, otherwise no trip summary or details
+    if (this.state.res_trip1.length > 1) {
+      indents.push(
+        <div>
+          <div style={{ backgroundColor: bgColors.Blue }}>
+            <ArrowDropDownIcon />
+            <label style={{ fontSize: "16px" }}>Trip</label> <TimeIcon />
+            {Math.floor(total_time / 60)}:{total_time % 60}
+            <PlaceIcon />
+            {total_mileage}
+            {" mi "}
+            <GasCostIcon />${total_gas_price.toFixed(2).toLocaleString()}
+          </div>
+          <OneTrip data={this.state} />
+        </div>
+      );
+    }
+    return indents;
+  }
+
   render() {
     var total_gas_price = getTotal(this.state.res_cost);
     var total_time = getTotal(this.state.time_in_digits);
     var total_mileage = getTotal(this.state.mileage_in_digits).toLocaleString();
     var total_stop = 0;
-    return (
-      <div>
-        <div style={{ backgroundColor: bgColors.Blue }}>
-          <ArrowDropDownIcon />
-          <label style={{ fontSize: "16px" }}>Trip</label> <TimeIcon />
-          {Math.floor(total_time / 60)}:{total_time % 60}
-          <PlaceIcon />
-          {total_mileage}
-          {" mi "}
-          <GasCostIcon />${total_gas_price.toFixed(2).toLocaleString()}
-        </div>
-        <OneTrip data={this.state} />
-      </div>
+    return this.trip_summary(
+      total_gas_price,
+      total_time,
+      total_mileage,
+      total_stop
     );
   }
 }

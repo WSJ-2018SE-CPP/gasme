@@ -50,14 +50,13 @@ class OneTrip extends React.Component {
         } else if (i === gas_price.length - 1) {
           thumbnail = parkImg;
           outgoing_line = null;
-        } 
+        }
         // changed to fix image on stoppoints (NON-gas station)
         else if (!trip[i].is_gas_station) {
-          thumbnail = homeImg; 
+          thumbnail = homeImg;
         }
         number_of_stops += 1;
-      }
-      else {
+      } else {
         //This one if you want the format to be A,2,3,4,5,B,7,8,9,C
         //index = i + 1;
         //This one if you want the format to be A,1,2,3,4,B,5,6,7,C

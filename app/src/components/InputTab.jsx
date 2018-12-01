@@ -43,10 +43,12 @@ class IconLabelTabs extends React.Component {
       status: 0,
       gas_price: [0.0],
       mileage: ["0 mi"],
-      trip1: [{
-        name: "Starting Location",
-        address: "None",
-      }],
+      trip1: [
+        {
+          name: "Starting Location",
+          address: "None"
+        }
+      ],
       time: ["0 min"],
       gallons_to_fuel: [0.0],
       cost: [0.0]
