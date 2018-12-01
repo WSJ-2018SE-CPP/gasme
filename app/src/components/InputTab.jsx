@@ -53,6 +53,12 @@ class IconLabelTabs extends React.Component {
     }
   };
 
+  //Added to automatically show map
+  componentDidMount() {
+    this.setState({ value: 1 });
+    this.setState({ value: 0 });
+  }
+
   handleChange = (event, value) => {
     this.setState({ value });
   };
@@ -62,7 +68,7 @@ class IconLabelTabs extends React.Component {
     console.log(dataFromChild);
     this.setState({ response: dataFromChild });
     console.log(this.state.response);
-    this.setState({value: 1});
+    this.setState({ value: 1 });
   };
 
   render() {

@@ -34,13 +34,15 @@ class Inputbar extends React.Component {
     this.addASearchBar = this.addASearchBar.bind(this);
     this.handleAddress = this.handleAddress.bind(this);
   }
-
+  
+  //Removed to avoid "invisible input bar"
+  /*
   componentDidMount() {
     var locations = this.state.locaitonsComponent.concat(LocationSearchInput);
     this.setState({ locaitonsComponent: locations });
 
     this.setState({locaitons: [""]})
-  }
+  }*/
 
   //Modified to make each input bar correspond to each location
   addASearchBar() {
