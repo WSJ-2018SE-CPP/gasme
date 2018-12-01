@@ -60,7 +60,8 @@ class Inputbar extends React.Component {
   //Modified to make each input bar correspond to each location
   deleteASearchBar = () => {
     console.log("delete div is clicked");
-    if (this.state.locaitonsComponent.length > 1) {
+    //Modified to allow removing all input bar completely instead of leaving of at least one
+    if (this.state.locaitonsComponent.length > 0) {
       //pop a locationSearch component
       var locations = this.state.locaitonsComponent;
       locations.pop();
