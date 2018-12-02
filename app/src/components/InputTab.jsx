@@ -47,12 +47,30 @@ class IconLabelTabs extends React.Component {
       time: [],
       gallons_to_fuel: [],
       cost: []
+    },
+    userinput: {
+      isLoading: false,
+      selectedCarBrand: "",
+      selectedMake: "",
+      selectedGas: "",
+      selectedYear: "2019",
+      selectedLocal: "15",
+      selectedHwy: "24",
+      selectedGas: "Top",
+      selectedGasLevel: "100",
+      selectedTankCapacity: "16",
+      locaitonsComponent: [],
+      locaitons: [],
+      gas: [
+        { value: "Top", label: "Shell, Arco, 76" },
+        { value: "Shell", label: "Shell" },
+        { value: "Any", label: "Any" }
+      ]
     }
   };
 
   //Added to automatically show map
   componentDidMount() {
-    this.setState({ value: 1 });
     this.setState({ value: 0 });
   }
 
@@ -61,12 +79,12 @@ class IconLabelTabs extends React.Component {
   };
 
   //use the data from the child
-  response_to_state = dataFromChild => {
-    console.log(dataFromChild);
-    this.setState({ response: dataFromChild });
+  response_to_state = (dataFromChild1, dataFromChild2) => {
+    console.log(dataFromChild1);
+    this.setState({ response: dataFromChild1, userinput: dataFromChild2 });
     console.log(this.state.response);
+    console.log(this.state.userinput);
     //Make sure pathToGo is rerendered even when currently at pathToGo Tab
-    this.setState({ value: 0 });
     this.setState({ value: 1 });
   };
 
@@ -74,7 +92,8 @@ class IconLabelTabs extends React.Component {
     const { classes } = this.props;
     const { value } = this.state;
     var response = this.state.response;
-
+    var userinput = this.state.userinput;
+    console.log("inputTab is created: hwy" + this.state.userinput.locaitons);
     return (
       <div>
         <div className="container-fluid">
@@ -99,6 +118,7 @@ class IconLabelTabs extends React.Component {
                       <UserInput
                         key="1"
                         callBackFromParent={this.response_to_state}
+                        listFromParent={userinput}
                       />
                     </TabContainer>
                   )}

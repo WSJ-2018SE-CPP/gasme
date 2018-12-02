@@ -7,26 +7,42 @@ import { Button } from "react-bootstrap";
 import LocationSearchInput from "./LocationSearchInput";
 import AddIcon from "@material-ui/icons/AddCircle";
 import CancelIcon from "@material-ui/icons/Cancel";
-import { ReactLoadingView } from 'react-spinner-component';
+import { ReactLoadingView } from "react-spinner-component";
 import logoImg from "../img/gasMe.png";
 
 class Inputbar extends React.Component {
   constructor(props) {
+    var selectedHwy = "28";
+    var selectedGas = "Top";
+    var selectedGasLevel = "100";
+    var selectedTankCapacity = "15";
+    var locaitonsComponent = [];
+    var locaitons = [];
+    if (props.listFromParent) {
+      selectedHwy = props.listFromParent.selectedHwy;
+      selectedGas = props.listFromParent.selectedGas;
+      selectedGasLevel = props.listFromParent.selectedGasLevel;
+      selectedTankCapacity = props.listFromParent.selectedTankCapacity;
+      locaitonsComponent = props.listFromParent.locaitonsComponent;
+      locaitons = props.listFromParent.locaitons;
+    }
     super(props);
     this.state = {
       // selectedLocal: "15",
+      fromParent: false, //for active rerender
+      isRerender: true, //to avoid rerender
       isLoading: false,
       selectedCarBrand: "",
       selectedMake: "",
       selectedGas: "",
       selectedYear: "2019",
       selectedLocal: "15",
-      selectedHwy: "24",
-      selectedGas: "Top",
-      selectedGasLevel: "100",
-      selectedTankCapacity: "15",
-      locaitonsComponent: [],
-      locaitons: [],
+      selectedHwy: selectedHwy,
+      selectedGas: selectedGas,
+      selectedGasLevel: selectedGasLevel,
+      selectedTankCapacity: selectedTankCapacity,
+      locaitonsComponent: locaitonsComponent,
+      locaitons: locaitons,
       gas: [
         { value: "Top", label: "Shell, Arco, 76" },
         { value: "Shell", label: "Shell" },
@@ -35,6 +51,20 @@ class Inputbar extends React.Component {
     };
     this.addASearchBar = this.addASearchBar.bind(this);
     this.handleAddress = this.handleAddress.bind(this);
+  }
+
+  // componentDidMount() {
+  //   if (
+  //     this.props.listFromParent &&
+  //     this.props.listFromParent.locaitons.length > 1
+  //   ) {
+  //     this.setState({ fromParent: true });
+  //   }
+  // }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log("in shouldComponentUpdate");
+    return this.state.isRerender;
   }
 
   //Removed to avoid "invisible input bar"
@@ -76,10 +106,6 @@ class Inputbar extends React.Component {
     }
   };
 
-  handleChange = event => {
-    console.log(`Selected: ${event.target.value}`);
-  };
-
   updateGas = selectedOption => {
     this.setState({ selectedGas: selectedOption.value });
     console.log(`Selected: ${selectedOption.label}`);
@@ -107,9 +133,9 @@ class Inputbar extends React.Component {
 
   getDropListGas = () => {
     const base = 24;
-    return Array.from(new Array(10), (v, i) => (
-      <option key={i} value={base + i * 4}>
-        {base + i * 4 + " MPG"}
+    return Array.from(new Array(6), (v, i) => (
+      <option key={i} value={base + i * 2}>
+        {base + i * 2 + " MPG"}
       </option>
     ));
   };
@@ -134,13 +160,13 @@ class Inputbar extends React.Component {
 
   postItems = () => {
     console.log(`posting to python with ${this.state.selectedGasLevel}`);
-    //Check number of locations on front end instead of checking response 
+    //Check number of locations on front end instead of checking response
     if (this.state.locaitons.length < 2) {
       alert("[001] Less than 2 Locations are given!");
     } else if (this.state.locaitons.includes("")) {
       alert("[003] One or more of the input bar(s) are empty.");
     } else {
-      this.setState({ isLoading: true })
+      this.setState({ isLoading: true, isRerender: false });
       fetch("http://54.183.10.84:5000/", {
         method: "post",
         //mode: 'no cors',
@@ -153,15 +179,15 @@ class Inputbar extends React.Component {
         .then(res => res.json())
         .then(res => {
           //error handling
-          this.setState({ isLoading: false })
+          this.setState({ isLoading: false });
           console.log(res);
           if (res["status"] == 2) {
             alert(
               "[002] One or more of the given location(s) do NOT exist or exist outside of the USA."
             );
           } else {
-            //pass the data to parent:??
-            this.props.callBackFromParent(res);
+            //pass the data to parent: InputTab
+            this.props.callBackFromParent(res, this.state);
             console.log(res);
           }
         });
@@ -178,7 +204,23 @@ class Inputbar extends React.Component {
   }
 
   render() {
-    const locaitons = this.state.locaitonsComponent.map((Element, index) => {
+    console.log(
+      "in Userinput: location len: " +
+        this.state.locaitons.length +
+        "| are you proped?: " +
+        this.state.fromParent
+    );
+    var locations = [];
+    //to rerender
+    // if (this.state.fromParent === true) {
+    //   console.log("this.state.fromParent === true");
+    //   // for(var i = 0; i < this.state.locaitons.length; i++){
+    //   //   locations.push(<LocationSearchInput props={this.state.locaitons[i]}/>)
+    //   // }
+    //   locations = this.state.locaitonsComponent;
+    //   console.log("done");
+    // } else {
+    locations = this.state.locaitonsComponent.map((Element, index) => {
       return (
         //Modified to make each input bar correspond to each location
         <Element
@@ -188,22 +230,13 @@ class Inputbar extends React.Component {
         />
       );
     });
-
-    console.log(
-      "in render: location component#" +
-      this.state.locaitonsComponent.length.toString()
-    );
-
-    console.log(
-      "in render: locations#: " + this.state.locaitons.length.toString()
-    );
-    console.log("in render: locations: " + this.state.locaitons);
+    // }
 
     return (
       <div className="filter">
         <div className="input-sec">
           <h3 className="heading-first">Locations</h3>
-          <div>{locaitons}</div>
+          <div>{locations}</div>
           <div>
             <AddIcon color="primary" onClick={this.addASearchBar} />
             <CancelIcon onClick={this.deleteASearchBar} />
@@ -218,9 +251,15 @@ class Inputbar extends React.Component {
               <select
                 className="select"
                 onChange={this.updateHwy}
-                value={this.selectedHwy}
+                defaultValue={this.state.selectedHwy}
               >
-                {this.getDropListGas()}
+                {this.getDropListGas() /* {getDropList(
+                  24,
+                  36,
+                  2,
+                  parseInt(this.state.selectedHwy),
+                  " MPG"
+                )} */}
               </select>
             </label>
           </div>
@@ -230,9 +269,15 @@ class Inputbar extends React.Component {
               <select
                 className="select"
                 onChange={this.updateCapacity}
-                value={this.selectedTankCapacity}
+                defaultValue={this.state.selectedTankCapacity}
               >
-                {this.getDropCapacity()}
+                {this.getDropCapacity() /* {getDropList(
+                  15,
+                  25,
+                  2,
+                  parseInt(this.state.selectedTankCapacity),
+                  " gals"
+                )} */}
               </select>
             </label>
           </div>
@@ -243,9 +288,15 @@ class Inputbar extends React.Component {
               <select
                 className="select"
                 onChange={this.updateGasLevel}
-                value={this.selectedGasLevel}
+                defaultValue={this.state.selectedGasLevel}
               >
-                {this.getDropListTank()}
+                {this.getDropListTank() /* {getDropList(
+                  100,
+                  10,
+                  -10,
+                  parseInt(this.state.selectedGasLevel),
+                  " %"
+                )} */}
               </select>
             </label>
           </div>
@@ -271,19 +322,20 @@ class Inputbar extends React.Component {
             SUBMIT
           </Button>
         </div>
-        {this.state.isLoading && <ReactLoadingView
-          loading={true}
-          bgColor='#f1f1f1'
-          spinnerColor='steelblue'
-          textColor='#676767'
-          textStyle='80'
-          logoSrc={logoImg}
-          LoaderView='ball-beat'
-          customheight='100%'
-          text='Calculating Route...'
-          customClassAdd='class'
-        >
-        </ReactLoadingView>}
+        {this.state.isLoading && (
+          <ReactLoadingView
+            loading={true}
+            bgColor="#f1f1f1"
+            spinnerColor="steelblue"
+            textColor="#676767"
+            textStyle="80"
+            logoSrc={logoImg}
+            LoaderView="ball-beat"
+            customheight="100%"
+            text="Calculating Route..."
+            customClassAdd="class"
+          />
+        )}
       </div>
     );
   }
@@ -292,3 +344,28 @@ class Inputbar extends React.Component {
 ReactDOM.render(<Inputbar />, document.getElementById("root"));
 
 export default Inputbar;
+
+function getDropList(base, max, interval, cur, unit) {
+  var loop = Math.abs((max - cur) / interval);
+  var intents = [];
+  //add the option from the current selectedHwy
+  intents.push(
+    Array.from(new Array(loop + 1), (v, i) => (
+      <option key={i} value={cur + i * interval}>
+        {cur + i * interval + unit}
+      </option>
+    ))
+  );
+
+  //now add the rest
+  loop = Math.abs((cur - base) / interval);
+  intents.push(
+    Array.from(new Array(loop), (v, i) => (
+      <option key={i} value={base + i * interval}>
+        {base + i * interval + unit}
+      </option>
+    ))
+  );
+
+  return intents;
+}
