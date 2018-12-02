@@ -8,7 +8,7 @@ class Jumbotron extends Component {
           <div className="container">
             <h1 className="display-5">GasMe</h1>
             <p className="lead">
-                gas your trip cheap
+              Helping You Spend Less on Gas!
             </p>
           </div>
         </div>

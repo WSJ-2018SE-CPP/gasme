@@ -1,0 +1,18 @@
+h2 {
+  text-align: center;
+}
+
+.third {
+    text-align: center;
+    padding-top: 1rem;
+  }
+
+.icon {
+    height: 100px;
+    width: 30%;
+}
+
+.title {
+  font-weight: bold;
+  color: steelblue;
+}
