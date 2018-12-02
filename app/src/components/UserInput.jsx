@@ -62,6 +62,13 @@ class Inputbar extends React.Component {
   //   }
   // }
 
+  componentDidMount(){
+    //to remove the troublesome location history from last search
+    if (this.state.isRerender) {
+      this.setState({ locaitons: [], locaitonsComponent: [] });
+    }
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     console.log("in shouldComponentUpdate");
     return this.state.isRerender;
