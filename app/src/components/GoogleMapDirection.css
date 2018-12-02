@@ -32,12 +32,11 @@
 }
 
 #map {
-  padding-top: 165px;
-  height: 86vh;
+  height: 81.3vh;
   position: "relative";
-  top: 120px;
+  top: 16vh;
   z-index: 0;
-  height: 660px;
+  margin: -2.5vh -3vh -2.5vh -4vh /*up  right  down  left*/
 }
 html,
 body {

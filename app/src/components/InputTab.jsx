@@ -16,7 +16,7 @@ const styles = {
   root: {
     flexGrow: 1,
     width: 350,
-    height: "80vh",
+    height: "81.5vh",
     backgroundColor: "#eef8fd",
     display: "block"
   },
@@ -58,7 +58,7 @@ class IconLabelTabs extends React.Component {
       selectedHwy: "24",
       selectedGas: "Top",
       selectedGasLevel: "100",
-      selectedTankCapacity: "16",
+      selectedTankCapacity: "15",
       locaitonsComponent: [],
       locaitons: [],
       gas: [
@@ -98,7 +98,7 @@ class IconLabelTabs extends React.Component {
       <div>
         <div className="container-fluid">
           <div className="row">
-            <div className="col-md-1">
+            <div className="col-md-3">
               <div className="float" styles={{ position: "absolute" }}>
                 <Paper square className={classes.root}>
                   <Tabs
@@ -130,7 +130,7 @@ class IconLabelTabs extends React.Component {
                 </Paper>
               </div>
             </div>
-            <div className="col-md-11">
+            <div className="col-md-9">
               <GoogleMapDirection listFromParent={response} />
             </div>
           </div>

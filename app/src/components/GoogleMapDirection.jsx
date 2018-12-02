@@ -70,6 +70,9 @@ class GoogleMapDirection extends Component {
     );
 
     this.setMarkers(map);
+    if (this.state.count === 0) {
+      this.fitBound(map);
+    }
   };
 
   calculateAndDisplayRouteWayPoints(directionsService, directionsDisplay) {
@@ -111,6 +114,17 @@ class GoogleMapDirection extends Component {
       }
     );
   }
+
+  fitBound = map => {
+    var bounds = new window.google.maps.LatLngBounds();
+    for (var i = 0; i < this.state.trip1; i++) {
+      bounds.extend({
+        lat: this.state.trip1[i].lat,
+        lng: this.state.trip1[i].long
+      });
+    }
+    map.fitBounds(bounds);
+  };
 
   setMarkers = map => {
     // Adds markers to the map.
