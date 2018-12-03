@@ -4,9 +4,26 @@
     padding-left: 10px;
     padding-top: 10px;
     height: 180px;
-    text-align: left;
+    text-align: center;
+    margin-left: 25px;
+    margin-right: 25px;
+
 }
 
 .column {
     text-align: center;
+    flex:1;
+}
+
+.form {
+    padding-top: 50px;
+    
+}
+
+.flex {
+    flex: 1;
+}
+
+.location{
+    padding-top: 50px;
 }
