@@ -1,0 +1,12 @@
+.text{
+    background-color: lightgray;
+    color: black;
+    padding-left: 10px;
+    padding-top: 10px;
+    height: 180px;
+    text-align: left;
+}
+
+.column {
+    text-align: center;
+}
