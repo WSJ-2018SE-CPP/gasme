@@ -32,7 +32,7 @@ class Home extends Component {
               </div>
               <div>
                 Ready to plan a trip? 
-                Our trip planner can help you find the cheapest route with over 150,000 gas stations location around the U.S.
+                Our trip planner can help you find the cheapest route with over 150,000 gas stations in the U.S.
                 Plan a trip <a href="gasMyTrip"> now</a>!
               </div>
             </div>
