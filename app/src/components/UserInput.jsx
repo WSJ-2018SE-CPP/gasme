@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
 import "./UserInput.css";
 import Select from "react-select";
@@ -34,7 +34,6 @@ class Inputbar extends React.Component {
       isLoading: false,
       selectedCarBrand: "",
       selectedMake: "",
-      selectedGas: "",
       selectedYear: "2019",
       selectedLocal: "15",
       selectedHwy: selectedHwy,
@@ -188,7 +187,7 @@ class Inputbar extends React.Component {
           //error handling
           this.setState({ isLoading: false });
           console.log(res);
-          if (res["status"] == 2) {
+          if (res["status"] === 2) {
             alert(
               "[002] One or more of the given location(s) do NOT exist or exist outside of the USA."
             );

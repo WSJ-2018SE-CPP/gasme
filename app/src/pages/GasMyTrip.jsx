@@ -6,9 +6,6 @@ import IconLabelTabs from "../components/InputTab";
 class GasMyTrip extends Component {
   state = {};
   render() {
-    var divStyle = {
-      paddingTop: "115px"
-    };
     return (
       <div>
         <Navbar />

@@ -52,7 +52,6 @@ class IconLabelTabs extends React.Component {
       isLoading: false,
       selectedCarBrand: "",
       selectedMake: "",
-      selectedGas: "",
       selectedYear: "2019",
       selectedLocal: "15",
       selectedHwy: "24",

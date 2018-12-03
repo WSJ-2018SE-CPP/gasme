@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import gasBrandIcon from "../img/gas_station_building.jpg";
 import homeImg from "../img/home_real.jpg";
 import parkImg from "../img/park.jpg";
@@ -68,7 +68,7 @@ class OneTrip extends React.Component {
             <div className="waypoint-card">
               <div className="waypoint-info">
                 <div className="waypoint-image">
-                  <img className="waypoint-icon" src={thumbnail} />
+                  <img className="waypoint-icon" src={thumbnail} alt="location img"/>
                 </div>
                 {/* Added name and address */}
                 <div className="waypoint-details">

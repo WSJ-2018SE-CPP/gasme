@@ -24,7 +24,7 @@ class Home extends Component {
             <div className="col-md-4 third">
               <div>
                 <a href="/gasMyTrip">
-                  <img src={tripImg} className="icon"/>
+                  <img src={tripImg} className="icon" alt="trip"/>
                   <div className="title">
                     Gas My Trip
                   </div>
@@ -39,7 +39,7 @@ class Home extends Component {
             <div className="col-md-4 third">
               <div>
                   <a href="/about">
-                    <img src={aboutImg} className="icon"/>
+                    <img src={aboutImg} className="icon" alt="about"/>
                     <div className="title">
                       About Us
                     </div>
@@ -53,7 +53,7 @@ class Home extends Component {
             <div className="col-md-4 third">
               <div>
                 <a href="/contact">
-                  <img src={contactImg} className="icon"/>
+                  <img src={contactImg} className="icon" alt="contact"/>
                   <div className="title">
                      Contact Us
                   </div>

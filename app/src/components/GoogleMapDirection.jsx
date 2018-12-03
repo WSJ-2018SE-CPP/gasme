@@ -23,7 +23,7 @@ class GoogleMapDirection extends Component {
   // check when to render
   shouldComponentUpdate(nextProps, nextState) {
     //render for the first time we click path to go
-    if (this.state.count == 0) {
+    if (this.state.count === 0) {
       this.renderMap();
       this.setState({ count: 1 });
     }
@@ -146,7 +146,7 @@ class GoogleMapDirection extends Component {
     };
     var infowindow = new window.google.maps.InfoWindow();
     var ReactDOMServer = require("react-dom/server");
-    var index = i;
+    var index = 0;
     var cur_stop = 65;
     var number_of_stops = 0;
 
@@ -172,7 +172,7 @@ class GoogleMapDirection extends Component {
         });
       } else {
         number_of_stops += 1;
-        var marker = new window.google.maps.Marker({
+        marker = new window.google.maps.Marker({
           position: { lat: lat, lng: long },
           map: map,
           icon: icon,
@@ -237,7 +237,7 @@ function setPopOver(index, address, brand, price, len) {
 
   return (
     <div className="info-box-wrap">
-      <img className="img" src={thumbnail} />
+      <img className="img" src={thumbnail} alt="marker img"/>
       <div className="info-box-text-wrap">
         <h6 className="address">{address}</h6>
         {price > 0 && (
