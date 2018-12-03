@@ -46,7 +46,7 @@ class Home extends Component {
                   </a>
                 </div>
                 <div>
-                  We are a group of developer who are inspired to solve the problems many commuters face. 
+                  We are a group of developers who are inspired to solve the problems many commuters face. 
                   Read more about us <a href="/about"> here... </a>
                 </div>
               </div>
