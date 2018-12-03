@@ -54,7 +54,7 @@ class Navbar extends Component {
             <li>
               <OverlayTrigger placement="right" overlay={tooltip}>
                 <a href="/GasMyTrip" alt=" new trip">
-                  <img src={new_trip_btn} />
+                  <img src={new_trip_btn} style={{width:"6vh", height:"6vh"}}/>
                 </a>
               </OverlayTrigger>
             </li>
