@@ -1,0 +1,32 @@
+.jumbo {
+  background-image: url(../img/gasMe_route.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  color: rgb(255, 255, 255);
+  height: 100vh;
+  margin: 0 0 0 0;
+}
+
+.link {
+  color: rgb(255, 255, 255);
+  text-decoration: underline;
+}
+
+.jumbotron-text {
+  margin: 0vh 35vh 20vh 35vh;
+  padding-top: 35vh;
+  display: block;
+  text-align: center;
+}
+
+h5 {
+    color: #063028;
+}
+
+.title {    
+    font-weight: bold;
+    color: steelblue;
+    text-shadow: 2px 2px #fff;
+  }
+  
